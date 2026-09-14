@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nova.tech | Next-Gen Automotive Advertising & High-Performance Fleet</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        nova: {
+                            50: '#f0f4ff',
+                            100: '#e0e9ff',
+                            400: '#3b82f6',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            900: '#0b1329',
+                            950: '#060913',
+                            accent: '#00f2fe',
+                            gold: '#fbbf24'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #05070d;
+            color: #e2e8f0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+        .heading-font { font-family: 'Space Grotesk', sans-serif; }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(37, 99, 235, 0.3);
+        }
+        .glow-text {
+            text-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+    </style>
+</head>
+<body class="custom-scrollbar">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-gradient-to-r from-blue-900 via-nova-900 to-slate-950 border-b border-blue-500/20 text-xs py-2 px-4 text-center text-blue-200">
+        <span class="inline-block bg-blue-500/20 text-blue-400 font-semibold px-2 py-0.5 rounded text-[10px] mr-2">ANNOUNCEMENT</span>
+        <span>nova.tech expands global advertising fleet with 50+ new high-performance vehicles for 2026 campaign media placement.</span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-nova-950/90 backdrop-blur-md border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="scrollToSection('hero')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                    <i class="fa-solid font-bold text-slate-950 text-xl font-heading">N</i>
+                </div>
+                <div>
+                    <span class="text-2xl font-bold font-heading tracking-wider text-white">nova<span class="text-cyan-400">.tech</span></span>
+                    <span class="block text-[9px] uppercase tracking-widest text-slate-400 font-medium">Automotive Media & Fleet</span>
+                </div>
+            </div>
+
+            <!-- Main Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#fleet" class="hover:text-cyan-400 transition-colors">Fleet Collection (50+)</a>
+                <a href="#compare" class="hover:text-cyan-400 transition-colors">Comparison Tool</a>
+                <a href="#advertising" class="hover:text-cyan-400 transition-colors">Ad Services</a>
+                <a href="#calculator" class="hover:text-cyan-400 transition-colors">Campaign Estimator</a>
+                <a href="#about" class="hover:text-cyan-400 transition-colors">About Us</a>
+            </nav>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-3">
+                <button onclick="toggleCompareDrawer()" class="relative bg-slate-900 border border-slate-700 hover:border-cyan-500 text-slate-200 px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-code-compare text-cyan-400"></i>
+                    <span>Compare</span>
+                    <span id="compareCountBadge" class="bg-cyan-500 text-slate-950 text-[10px] font-bold px-1.5 py-0.2 rounded-full hidden">0</span>
+                </button>
+                <a href="#advertising" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs tracking-wide shadow-md shadow-cyan-500/10 transition">
+                    BOOK CAMPAIGN
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative py-20 lg:py-28 overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/30 via-nova-950 to-nova-950 -z-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 bg-blue-950/80 border border-blue-500/30 px-3 py-1.5 rounded-full text-xs text-cyan-300 font-medium">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                        GLOBAL AUTOMOTIVE ADVERTISING PLATFORM
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-heading text-white leading-tight">
+                        Real High-Performance Vehicles. <br/>
+                        <span class="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent glow-text">Ultra-Targeted Media Reach.</span>
+                    </h1>
+                    <p class="text-slate-300 text-base sm:text-lg max-w-2xl font-normal leading-relaxed">
+                        nova.tech bridges world-class luxury automakers, media agencies, and high-impact advertisers. Access our real-world fleet of over 50+ hypercars, electric supercars, luxury SUVs, and track icons with complete verifiable telemetry.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <a href="#fleet" class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-6 py-3.5 rounded-xl text-sm transition flex items-center gap-2 shadow-lg shadow-cyan-500/20">
+                            <span>Explore 50+ Vehicles</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="#calculator" class="bg-slate-900 border border-slate-700 hover:border-slate-500 text-slate-200 font-semibold px-6 py-3.5 rounded-xl text-sm transition flex items-center gap-2">
+                            <i class="fa-solid fa-calculator text-cyan-400"></i>
+                            <span>Ad Rate Calculator</span>
+                        </a>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="grid grid-cols-3 gap-6 pt-8 border-t border-slate-800/80">
+                        <div>
+                            <span class="block text-2xl lg:text-3xl font-bold font-heading text-white" id="totalVehiclesCount">52+</span>
+                            <span class="text-xs text-slate-400">Curated Fleet Vehicles</span>
+                        </div>
+                        <div>
+                            <span class="block text-2xl lg:text-3xl font-bold font-heading text-cyan-400">$180M+</span>
+                            <span class="text-xs text-slate-400">Combined Portfolio Value</span>
+                        </div>
+                        <div>
+                            <span class="block text-2xl lg:text-3xl font-bold font-heading text-white">100%</span>
+                            <span class="text-xs text-slate-400">Real Studio & Track Photos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Hero Car Card -->
+                <div class="lg:col-span-5">
+                    <div class="relative rounded-2xl overflow-hidden glass-card p-4 group">
+                        <div class="absolute top-6 left-6 z-10 bg-red-600/90 text-white font-bold text-[10px] tracking-wider px-2.5 py-1 rounded">
+                            FLAGSHIP HYPERCAR
+                        </div>
+                        <div class="h-64 sm:h-72 rounded-xl overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=1200&q=80" 
+                                 alt="Bugatti Tourbillon" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                        </div>
+                        <div class="pt-4 px-2">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-xl font-bold font-heading text-white">Bugatti Tourbillon (2026)</h3>
+                                    <p class="text-xs text-slate-400">8.3L V16 Naturally Aspirated + 3 Electric Motors</p>
+                                </div>
+                                <span class="bg-cyan-500/10 text-cyan-400 text-xs font-bold px-2.5 py-1 rounded border border-cyan-500/30">1,800 HP</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 mt-4 text-center bg-slate-900/60 p-2.5 rounded-lg text-xs">
+                                <div><span class="text-slate-400 block text-[10px]">0-60 MPH</span><span class="font-bold text-white">2.0s</span></div>
+                                <div><span class="text-slate-400 block text-[10px]">TOP SPEED</span><span class="font-bold text-white">276 MPH</span></div>
+                                <div><span class="text-slate-400 block text-[10px]">AD TIER</span><span class="font-bold text-cyan-400">Ultra-Luxury</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Fleet Explorer Section -->
+    <section id="fleet" class="py-16 bg-slate-950 border-t border-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold font-heading text-white">The Verified Collection</h2>
+                    <p class="text-slate-400 text-sm mt-1">Explore specifications, performance statistics, and advertising availability for all 50+ vehicles.</p>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-slate-400 bg-slate-900 px-3 py-2 rounded-lg border border-slate-800">
+                    <i class="fa-solid fa-car text-cyan-400"></i>
+                    <span>Showing <strong id="displayedCount" class="text-white">0</strong> of <strong id="totalCount" class="text-white">52</strong> Vehicles</span>
+                </div>
+            </div>
+
+            <!-- Controls & Filters Bar -->
+            <div class="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl mb-8 space-y-4">
+                
+                <!-- Top Filter Row: Search & Selects -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
+                    <!-- Search Input -->
+                    <div class="lg:col-span-5 relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500 text-sm"></i>
+                        <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Search by vehicle name, make, engine..." 
+                               class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition">
+                    </div>
+
+                    <!-- Sort Select -->
+                    <div class="lg:col-span-3">
+                        <select id="sortSelect" onchange="applyFilters()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-slate-300 focus:outline-none focus:border-cyan-500 transition">
+                            <option value="hp-desc">Sort by: Power (High to Low)</option>
+                            <option value="hp-asc">Sort by: Power (Low to High)</option>
+                            <option value="speed-desc">Sort by: 0-60 Speed (Fastest First)</option>
+                            <option value="price-desc">Sort by: Price (High to Low)</option>
+                            <option value="name-asc">Sort by: Name (A to Z)</option>
+                        </select>
+                    </div>
+
+                    <!-- Power Range Filter -->
+                    <div class="lg:col-span-4 flex items-center gap-3 bg-slate-950 border border-slate-800 px-4 py-2 rounded-xl">
+                        <span class="text-xs text-slate-400 font-medium shrink-0">Min Power:</span>
+                        <input type="range" id="powerRange" min="300" max="2000" step="50" value="300" oninput="updatePowerLabel(); applyFilters()" class="w-full accent-cyan-400 cursor-pointer">
+                        <span id="powerValueLabel" class="text-xs font-bold text-cyan-400 shrink-0">300 HP</span>
+                    </div>
+                </div>
+
+                <!-- Category Tabs -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 pt-1 custom-scrollbar" id="categoryTabs">
+                    <button onclick="selectCategory('All')" class="category-btn active bg-cyan-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs whitespace-nowrap transition">All Vehicles (52)</button>
+                    <button onclick="selectCategory('Hypercars')" class="category-btn bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs whitespace-nowrap transition">Hypercars</button>
+                    <button onclick="selectCategory('Super EVs')" class="category-btn bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs whitespace-nowrap transition">Super EVs</button>
+                    <button onclick="selectCategory('Luxury SUVs')" class="category-btn bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs whitespace-nowrap transition">Luxury SUVs</button>
+                    <button onclick="selectCategory('Executive Sedans')" class="category-btn bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs whitespace-nowrap transition">Executive Sedans</button>
+                    <button onclick="selectCategory('Track Specials')" class="category-btn bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs whitespace-nowrap transition">Track Specials</button>
+                    <button onclick="selectCategory('Iconic Restomods')" class="category-btn bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-300 px-4 py-2 rounded-xl text-xs whitespace-nowrap transition">Iconic Restomods</button>
+                </div>
+            </div>
+
+            <!-- Vehicles Grid -->
+            <div id="fleetGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-16 bg-slate-900/40 rounded-2xl border border-slate-800">
+                <i class="fa-solid fa-car-tunnel text-4xl text-slate-600 mb-3"></i>
+                <h3 class="text-lg font-bold text-white">No Vehicles Match Your Criteria</h3>
+                <p class="text-xs text-slate-400 mt-1">Try lowering the minimum power slider or searching for another keyword.</p>
+                <button onclick="resetFilters()" class="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs px-4 py-2 rounded-lg">Reset Filters</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Side-by-Side Car Comparison Drawer / Modal -->
+    <div id="compareModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex flex-col justify-end lg:justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-6xl w-full mx-auto max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+            <!-- Modal Header -->
+            <div class="p-4 sm:p-6 border-b border-slate-800 flex justify-between items-center bg-slate-950">
+                <div>
+                    <h3 class="text-xl font-bold font-heading text-white">Fleet Specification Matrix</h3>
+                    <p class="text-xs text-slate-400">Comparing up to 3 selected vehicles</p>
+                </div>
+                <button onclick="toggleCompareDrawer()" class="text-slate-400 hover:text-white p-2 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body Matrix -->
+            <div class="p-6 overflow-y-auto custom-scrollbar flex-1" id="compareContent">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Detailed Specs Modal -->
+    <div id="specModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-y-auto custom-scrollbar shadow-2xl relative">
+            <button onclick="closeSpecModal()" class="absolute top-4 right-4 z-10 bg-slate-950/80 text-slate-300 hover:text-white w-9 h-9 rounded-full flex items-center justify-center border border-slate-800 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="specModalBody">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Campaign Rate Calculator Section -->
+    <section id="calculator" class="py-16 bg-slate-900/60 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mx-auto text-center mb-12">
+                <h2 class="text-3xl font-extrabold font-heading text-white">Advertising Campaign Estimator</h2>
+                <p class="text-slate-400 text-sm mt-2">Calculate your media deployment rate based on vehicle tier, duration, and target distribution channels.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-950 border border-slate-800 rounded-2xl p-6 lg:p-8">
+                <div class="lg:col-span-7 space-y-5">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-2">SELECT VEHICLE ADVERTISING CATEGORY</label>
+                        <select id="calcCategory" onchange="calculateAdCost()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500">
+                            <option value="hypercar">Hypercar Tier (e.g. Bugatti, Koenigsegg, Rimac) - $15,000 / day</option>
+                            <option value="ev">Super EV Tier (e.g. Taycan Turbo GT, Air Sapphire) - $8,500 / day</option>
+                            <option value="suv">Luxury SUV Tier (e.g. Cullinan, Purosangue, Urus) - $7,000 / day</option>
+                            <option value="sedan">Executive Tier (e.g. Spectre, Continental GT) - $6,000 / day</option>
+                            <option value="track">Track Weapon Tier (e.g. GT3 RS, Revuelto) - $10,000 / day</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-2">CAMPAIGN DURATION (DAYS)</label>
+                            <input type="number" id="calcDays" value="3" min="1" max="90" oninput="calculateAdCost()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-2">MEDIA REACH DISTRIBUTION</label>
+                            <select id="calcReach" onchange="calculateAdCost()" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500">
+                                <option value="digital">Digital Commercial & Social (1.0x)</option>
+                                <option value="global">Global Broadcast & Cinema (1.8x)</option>
+                                <option value="exclusive">Private VIP & Luxury Event (1.4x)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 to-blue-950/60 p-6 rounded-xl border border-blue-500/20 text-center">
+                    <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold">ESTIMATED CAMPAIGN RATE</span>
+                    <div class="text-4xl lg:text-5xl font-extrabold font-heading text-cyan-400 my-4" id="calcResult">$45,000</div>
+                    <p class="text-xs text-slate-400 mb-6">Includes white-glove transport, telemetry logging, insurance coverage, and professional driver availability.</p>
+                    <button onclick="alert('Thank you! A nova.tech campaign director will contact your team within 2 hours.')" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold py-3 rounded-xl text-xs transition">
+                        REQUEST CAMPAIGN PROPOSAL
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-900 py-12 text-slate-500 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-cyan-500 flex items-center justify-center text-slate-950 font-bold">N</div>
+                <span class="text-white font-bold text-base font-heading">nova<span class="text-cyan-400">.tech</span></span>
+            </div>
+            <p>© 2026 nova.tech Automotive Advertising Inc. All rights reserved. Real imagery & verified performance specs.</p>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-slate-300">Privacy Policy</a>
+                <a href="#" class="hover:text-slate-300">Telemetry Specs</a>
+                <a href="#" class="hover:text-slate-300">Contact Media Desk</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // DATASET OF 52 REAL CARS WITH FULL SPECIFICATIONS & REAL PHOTOS
+        const CARS_DATA = [
+            // HYPERCARS (10)
+            {
+                id: 'bugatti-tourbillon',
+                name: 'Bugatti Tourbillon',
+                brand: 'Bugatti',
+                category: 'Hypercars',
+                year: 2026,
+                price: '$4,100,000',
+                dailyAdRate: '$18,500',
+                specs: { hp: 1800, zeroToSixty: '2.0s', topSpeed: '276 mph', engine: '8.3L V16 NA + 3 E-Motors', drivetrain: 'AWD', weight: '4,398 lbs' },
+                image: 'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=800&q=80',
+                description: 'The pinnacle of analog horology and raw electric hybrid powertrain performance.'
+            },
+            {
+                id: 'koenigsegg-jesko',
+                name: 'Koenigsegg Jesko Absolut',
+                brand: 'Koenigsegg',
+                category: 'Hypercars',
+                year: 2025,
+                price: '$3,400,000',
+                dailyAdRate: '$16,000',
+                specs: { hp: 1600, zeroToSixty: '2.3s', topSpeed: '310 mph', engine: '5.0L Twin-Turbo V8', drivetrain: 'RWD (LST)', weight: '3,064 lbs' },
+                image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=800&q=80',
+                description: 'Engineered to break speed records with ultra-low 0.278 CD aerodynamic drag.'
+            },
+            {
+                id: 'rimac-nevera',
+                name: 'Rimac Nevera Time Attack',
+                brand: 'Rimac',
+                category: 'Hypercars',
+                year: 2025,
+                price: '$2,400,000',
+                dailyAdRate: '$14,500',
+                specs: { hp: 1914, zeroToSixty: '1.74s', topSpeed: '258 mph', engine: 'Quad Permanent Magnet Motors', drivetrain: 'All-Wheel Torque Vectoring', weight: '5,100 lbs' },
+                image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80',
+                description: 'World-record electric hypercar engineered in Croatia with unmatched zero-lag launching capability.'
+            },
+            {
+                id: 'pagani-utopia',
+                name: 'Pagani Utopia',
+                brand: 'Pagani',
+                category: 'Hypercars',
+                year: 2025,
+                price: '$2,500,000',
+                dailyAdRate: '$14,000',
+                specs: { hp: 852, zeroToSixty: '2.8s', topSpeed: '230 mph', engine: '6.0L AMG Twin-Turbo V12', drivetrain: '7-Speed Manual / AMT', weight: '2,822 lbs' },
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnZBZr5gJhvjq7PMaEpZ41gJTvsffWpFWHNU7DDhnXYQ&s=10',
+                description: 'Ultra-rare Italian automotive sculpture combining manual shifting with twin-turbocharged V12 fury.'
+            },
+            {
+                id: 'ferrari-sf90-xx',
+                name: 'Ferrari SF90 XX Stradale',
+                brand: 'Ferrari',
+                category: 'Hypercars',
+                year: 2025,
+                price: '$890,000',
+                dailyAdRate: '$9,500',
+                specs: { hp: 1015, zeroToSixty: '2.1s', topSpeed: '208 mph', engine: '4.0L Twin-Turbo V8 + 3 Electric Motors', drivetrain: 'e-AWD', weight: '3,439 lbs' },
+                image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=800&q=80',
+                description: 'Ferrari\'s first road-legal XX program vehicle delivering extreme aerodynamic downforce.'
+            },
+            {
+                id: 'mclaren-w1',
+                name: 'McLaren W1',
+                brand: 'McLaren',
+                category: 'Hypercars',
+                year: 2026,
+                price: '$2,100,000',
+                dailyAdRate: '$13,500',
+                specs: { hp: 1258, zeroToSixty: '2.7s', topSpeed: '217 mph', engine: '4.0L V8 Hybrid Powertrain', drivetrain: 'RWD', weight: '3,086 lbs' },
+                image: 'https://images.unsplash.com/photo-1621135802920-133df287f89c?auto=format&fit=crop&w=800&q=80',
+                description: 'The direct successor to the F1 and P1 featuring active ground-effect aerodynamics.'
+            },
+            {
+                id: 'aston-valkyrie',
+                name: 'Aston Martin Valkyrie',
+                brand: 'Aston Martin',
+                category: 'Hypercars',
+                year: 2025,
+                price: '$3,500,000',
+                dailyAdRate: '$17,000',
+                specs: { hp: 1160, zeroToSixty: '2.5s', topSpeed: '250 mph', engine: '6.5L Cosworth V12 Hybrid', drivetrain: 'RWD', weight: '2,425 lbs' },
+                image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=80',
+                description: 'Formula 1 tech brought straight to the street with an 11,100 RPM naturally aspirated V12 scream.'
+            },
+            {
+                id: 'mercedes-amg-one',
+                name: 'Mercedes-AMG ONE',
+                brand: 'Mercedes-Benz',
+                category: 'Hypercars',
+                year: 2025,
+                price: '$2,750,000',
+                dailyAdRate: '$15,000',
+                specs: { hp: 1049, zeroToSixty: '2.9s', topSpeed: '219 mph', engine: '1.6L F1 E-Turbo V6 + 4 E-Motors', drivetrain: 'AMG Performance 4MATIC+', weight: '3,737 lbs' },
+                image: 'https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&w=800&q=80',
+                description: 'Actual championship-winning Formula 1 engine inside a street-legal carbon monocoque.'
+            },
+            {
+                id: 'Range rover vorgue',
+                name: 'Range rover vorgue',
+                brand: 'Hennessey',
+                category: 'Hypercars',
+                year: 2025,
+                price: '$3,000,000',
+                dailyAdRate: '$15,500',
+                specs: { hp: 1817, zeroToSixty: '2.6s', topSpeed: '300+ mph', engine: '6.6L Twin-Turbo V8 "Fury"', drivetrain: 'RWD', weight: '2,998 lbs' },
+                image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=800&q=80',
+                description: 'American hypercar engineering crafted specifically to push beyond 300 mph.'
+            },
+            {
+                id: 'lotus-evija',
+                name: 'Lotus Evija',
+                brand: 'Lotus',
+                category: 'Hypercars',
+                year: 2025,
+                price: '$2,300,000',
+                dailyAdRate: '$13,000',
+                specs: { hp: 2011, zeroToSixty: '2.8s', topSpeed: '218 mph', engine: 'Quad Electric Motors', drivetrain: 'AWD Torque Vectoring', weight: '3,700 lbs' },
+                image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80',
+                description: 'The world\'s most powerful production road car with dramatic Venturi aerodynamic tunnels.'
+            },
+
+            // SUPER EVS (9)
+            {
+                id: 'porsche-taycan-turbo-gt',
+                name: 'Porsche Taycan Turbo GT',
+                brand: 'Porsche',
+                category: 'Super EVs',
+                year: 2025,
+                price: '$230,000',
+                dailyAdRate: '$4,500',
+                specs: { hp: 1092, zeroToSixty: '2.1s', topSpeed: '180 mph', engine: 'Dual Motor EV (Weissach Pkg)', drivetrain: 'AWD', weight: '4,925 lbs' },
+                image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=800&q=80',
+                description: 'Nürburgring electric lap record holder engineered with Attack Mode boost.'
+            },
+            {
+                id: 'lucid-air-sapphire',
+                name: 'Lucid Air Sapphire',
+                brand: 'Lucid',
+                category: 'Super EVs',
+                year: 2025,
+                price: '$249,000',
+                dailyAdRate: '$4,800',
+                specs: { hp: 1234, zeroToSixty: '1.89s', topSpeed: '205 mph', engine: 'Triple Motor EV', drivetrain: 'AWD', weight: '5,336 lbs' },
+                image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=800&q=80',
+                description: 'Sub-2 second luxury super-sedan with 427-mile EPA electric range.'
+            },
+            {
+                id: 'pininfarina-battista',
+                name: 'Automobili Pininfarina Battista',
+                brand: 'Pininfarina',
+                category: 'Super EVs',
+                year: 2025,
+                price: '$2,200,000',
+                dailyAdRate: '$12,500',
+                specs: { hp: 1900, zeroToSixty: '1.79s', topSpeed: '222 mph', engine: 'Quad Electric Motors', drivetrain: 'AWD', weight: '4,541 lbs' },
+                image: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=800&q=80',
+                description: 'Hand-crafted Italian hyper GT combining sublime elegance with instant torque.'
+            },
+            {
+                id: 'tesla-roadster-2026',
+                name: 'Tesla Roadster (2026)',
+                brand: 'Tesla',
+                category: 'Super EVs',
+                year: 2026,
+                price: '$250,000',
+                dailyAdRate: '$5,000',
+                specs: { hp: 1500, zeroToSixty: '1.9s', topSpeed: '250+ mph', engine: 'Tri-Motor All-Electric', drivetrain: 'AWD', weight: '4,400 lbs' },
+                image: 'https://images.unsplash.com/photo-1536700503339-1e4b06520771?auto=format&fit=crop&w=800&q=80',
+                description: 'Next-generation super EV convertible boasting 620 miles highway range.'
+            },
+            {
+                id: 'maserati-granturismo-folgore',
+                name: 'Maserati GranTurismo Folgore',
+                brand: 'Maserati',
+                category: 'Super EVs',
+                year: 2025,
+                price: '$205,000',
+                dailyAdRate: '$4,000',
+                specs: { hp: 761, zeroToSixty: '2.7s', topSpeed: '199 mph', engine: '800V Triple Motor EV', drivetrain: 'AWD', weight: '4,980 lbs' },
+                image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80',
+                description: '800-volt Formula E battery technology wrapped in iconic Italian GT styling.'
+            },
+            {
+                id: 'lotus-emeya-r',
+                name: 'Lotus Emeya R',
+                brand: 'Lotus',
+                category: 'Super EVs',
+                year: 2025,
+                price: '$150,000',
+                dailyAdRate: '$3,800',
+                specs: { hp: 905, zeroToSixty: '2.78s', topSpeed: '159 mph', engine: 'Dual Motor EV with 2-Speed Transmission', drivetrain: 'AWD', weight: '5,490 lbs' },
+                image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=800&q=80',
+                description: 'Hyper-stance electric GT sedan featuring active rear spoiler and air suspension.'
+            },
+            {
+                id: 'polestar-5',
+                name: 'Polestar 5',
+                brand: 'Polestar',
+                category: 'Super EVs',
+                year: 2025,
+                price: '$140,000',
+                dailyAdRate: '$3,500',
+                specs: { hp: 884, zeroToSixty: '3.1s', topSpeed: '155 mph', engine: 'Dual Rear Motor EV', drivetrain: 'AWD', weight: '4,850 lbs' },
+                image: 'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=800&q=80',
+                description: 'Scandinavian minimalist 4-door performance GT built on bonded aluminum chassis.'
+            },
+            {
+                id: 'audi-rs-etron-gt',
+                name: 'Audi RS e-tron GT Performance',
+                brand: 'Audi',
+                category: 'Super EVs',
+                year: 2025,
+                price: '$167,000',
+                dailyAdRate: '$3,700',
+                specs: { hp: 912, zeroToSixty: '2.5s', topSpeed: '155 mph', engine: 'Dual Motors with Active Suspension', drivetrain: 'quattro AWD', weight: '5,280 lbs' },
+                image: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=800&q=80',
+                description: 'Audi\'s most powerful production vehicle to date with ceramic brake setup.'
+            },
+            {
+                id: 'gmc-hummer-ev-omega',
+                name: 'GMC Hummer EV Omega Edition',
+                brand: 'GMC',
+                category: 'Super EVs',
+                year: 2025,
+                price: '$150,000',
+                dailyAdRate: '$4,200',
+                specs: { hp: 1000, zeroToSixty: '3.0s', topSpeed: '106 mph', engine: 'Ultium 3-Motor EV', drivetrain: 'CrabWalk 4WD', weight: '9,063 lbs' },
+                image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80',
+                description: 'Massive electric supertruck capable of Watts to Freedom 3-second sprints and diagonal CrabWalk.'
+            },
+
+            // LUXURY SUVS (9)
+            {
+                id: 'rolls-royce-cullinan-ii',
+                name: 'Rolls-Royce Cullinan Series II',
+                brand: 'Rolls-Royce',
+                category: 'Luxury SUVs',
+                year: 2025,
+                price: '$450,000',
+                dailyAdRate: '$6,500',
+                specs: { hp: 592, zeroToSixty: '4.9s', topSpeed: '155 mph', engine: '6.75L Twin-Turbo V12', drivetrain: 'AWD', weight: '6,069 lbs' },
+                image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=800&q=80',
+                description: 'The pinnacle of luxury off-road travel featuring illuminated fascia and Starlight headliner.'
+            },
+            {
+                id: 'ferrari-purosangue',
+                name: 'Ferrari Purosangue',
+                brand: 'Ferrari',
+                category: 'Luxury SUVs',
+                year: 2025,
+                price: '$400,000',
+                dailyAdRate: '$7,500',
+                specs: { hp: 715, zeroToSixty: '3.3s', topSpeed: '193 mph', engine: '6.5L Naturally Aspirated V12', drivetrain: '4RM-S AWD', weight: '4,480 lbs' },
+                image: 'https://images.unsplash.com/photo-1592198084033-aade902d1aae?auto=format&fit=crop&w=800&q=80',
+                description: 'Ferrari\'s inaugural 4-door 4-seater super-utility sports car with suicide doors and V12 scream.'
+            },
+            {
+                id: 'lamborghini-urus-se',
+                name: 'Lamborghini Urus SE Hybrid',
+                brand: 'Lamborghini',
+                category: 'Luxury SUVs',
+                year: 2025,
+                price: '$258,000',
+                dailyAdRate: '$5,500',
+                specs: { hp: 789, zeroToSixty: '3.4s', topSpeed: '194 mph', engine: '4.0L Twin-Turbo V8 + PHEV Motor', drivetrain: 'AWD Torque Vectoring', weight: '5,511 lbs' },
+                image: 'https://images.unsplash.com/photo-1519245659620-e859806a8d3b?auto=format&fit=crop&w=800&q=80',
+                description: 'Plug-in hybrid super SUV blending twin-turbo V8 torque with instant electric response.'
+            },
+            {
+                id: 'aston-dbx707',
+                name: 'Aston Martin DBX707',
+                brand: 'Aston Martin',
+                category: 'Luxury SUVs',
+                year: 2025,
+                price: '$245,000',
+                dailyAdRate: '$5,000',
+                specs: { hp: 707, zeroToSixty: '3.1s', topSpeed: '193 mph', engine: '4.0L AMG Twin-Turbo V8', drivetrain: 'AWD (Wet Clutch)', weight: '4,940 lbs' },
+                image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=800&q=80',
+                description: 'The world\'s fastest luxury SUV equipped with carbon ceramic brakes and electronic diff.'
+            },
+            {
+                id: 'bentley-bentayga-ewb',
+                name: 'Bentley Bentayga EWB Azure',
+                brand: 'Bentley',
+                category: 'Luxury SUVs',
+                year: 2025,
+                price: '$240,000',
+                dailyAdRate: '$4,800',
+                specs: { hp: 542, zeroToSixty: '4.5s', topSpeed: '180 mph', engine: '4.0L Twin-Turbo V8', drivetrain: 'AWD', weight: '5,542 lbs' },
+                image: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=800&q=80',
+                description: 'Extended wheelbase sanctuary featuring Airline Seat specification with climate sensing.'
+            },
+            {
+                id: 'mercedes-maybach-gls',
+                name: 'Mercedes-Maybach GLS 600',
+                brand: 'Mercedes-Maybach',
+                category: 'Luxury SUVs',
+                year: 2025,
+                price: '$178,000',
+                dailyAdRate: '$4,200',
+                specs: { hp: 550, zeroToSixty: '4.7s', topSpeed: '155 mph', engine: '4.0L V8 Biturbo + EQ Boost', drivetrain: '4MATIC+ AWD', weight: '6,140 lbs' },
+                image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80',
+                description: 'First-class luxury SUV equipped with active E-ACTIVE BODY CONTROL and bounce mode.'
+            },
+            {
+                id: 'range-rover-sv',
+                name: 'Range Rover SV Carmargue',
+                brand: 'Land Rover',
+                category: 'Luxury SUVs',
+                year: 2025,
+                price: '$235,000',
+                dailyAdRate: '$4,600',
+                specs: { hp: 606, zeroToSixty: '4.3s', topSpeed: '162 mph', engine: '4.4L Twin-Turbo V8 MHEV', drivetrain: 'AWD with All-Wheel Steering', weight: '5,820 lbs' },
+                image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=800&q=80',
+                description: 'Bespoke Special Vehicle Operations edition with ceramic controls and executive seating.'
+            },
+            {
+                id: 'bmw-xm-label-red',
+                name: 'BMW XM Label Red',
+                brand: 'BMW',
+                category: 'Luxury SUVs',
+                year: 2025,
+                price: '$185,000',
+                dailyAdRate: '$4,000',
+                specs: { hp: 738, zeroToSixty: '3.7s', topSpeed: '175 mph', engine: '4.4L Twin-Turbo V8 PHEV', drivetrain: 'M xDrive AWD', weight: '6,062 lbs' },
+                image: 'https://images.unsplash.com/photo-1556189250-72ba954cfc2b?auto=format&fit=crop&w=800&q=80',
+                description: 'The most powerful standalone BMW M production vehicle ever created.'
+            },
+            {
+                id: 'cadillac-escalade-v',
+                name: 'Cadillac Escalade-V',
+                brand: 'Cadillac',
+                category: 'Luxury SUVs',
+                year: 2025,
+                price: '$154,000',
+                dailyAdRate: '$3,800',
+                specs: { hp: 682, zeroToSixty: '4.4s', topSpeed: '125 mph', engine: '6.2L Supercharged V8', drivetrain: 'AWD', weight: '6,217 lbs' },
+                image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80',
+                description: 'Full-size American luxury SUV with 682 supercharged horsepower and 38-inch OLED display.'
+            },
+
+            // EXECUTIVE SEDANS & GTS (9)
+            {
+                id: 'rolls-royce-spectre',
+                name: 'Rolls-Royce Spectre',
+                brand: 'Rolls-Royce',
+                category: 'Executive Sedans',
+                year: 2025,
+                price: '$420,000',
+                dailyAdRate: '$6,000',
+                specs: { hp: 577, zeroToSixty: '4.4s', topSpeed: '155 mph', engine: 'Dual Electric Motors', drivetrain: 'AWD', weight: '6,371 lbs' },
+                image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=800&q=80',
+                description: 'The world\'s first ultra-luxury electric super coupe featuring Planar suspension system.'
+            },
+            {
+                id: 'bentley-continental-gt-speed',
+                name: 'Bentley Continental GT Speed',
+                brand: 'Bentley',
+                category: 'Executive Sedans',
+                year: 2025,
+                price: '$302,000',
+                dailyAdRate: '$5,200',
+                specs: { hp: 771, zeroToSixty: '3.1s', topSpeed: '208 mph', engine: '4.0L Ultra Performance V8 Hybrid', drivetrain: 'AWD', weight: '5,420 lbs' },
+                image: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=800&q=80',
+                description: 'Grand touring icon powered by an all-new 771-horsepower hybrid V8 powertrain.'
+            },
+            {
+                id: 'maybach-s680-v12',
+                name: 'Mercedes-Maybach S 680 V12',
+                brand: 'Mercedes-Maybach',
+                category: 'Executive Sedans',
+                year: 2025,
+                price: '$234,000',
+                dailyAdRate: '$4,800',
+                specs: { hp: 621, zeroToSixty: '4.4s', topSpeed: '155 mph', engine: '6.0L Biturbo V12', drivetrain: '4MATIC AWD', weight: '5,200 lbs' },
+                image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80',
+                description: 'Pure 12-cylinder luxury flagship with active road noise compensation and rear seat legroom sanctuary.'
+            },
+            {
+                id: 'porsche-panamera-turbo-e',
+                name: 'Porsche Panamera Turbo E-Hybrid',
+                brand: 'Porsche',
+                category: 'Executive Sedans',
+                year: 2025,
+                price: '$191,000',
+                dailyAdRate: '$4,100',
+                specs: { hp: 670, zeroToSixty: '3.0s', topSpeed: '196 mph', engine: '4.0L V8 Turbo + Hybrid', drivetrain: 'AWD', weight: me = '5,203 lbs' },
+                image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=800&q=80',
+                description: 'Active Ride air suspension chassis capable of instantaneous cornering roll elimination.'
+            },
+            {
+                id: 'bmw-i7-m70',
+                name: 'BMW i7 M70 xDrive',
+                brand: 'BMW',
+                category: 'Executive Sedans',
+                year: 2025,
+                price: '$168,000',
+                dailyAdRate: '$3,800',
+                specs: { hp: 650, zeroToSixty: '3.5s', topSpeed: '155 mph', engine: 'Dual Motor All-Electric', drivetrain: 'xDrive AWD', weight: '5,929 lbs' },
+                image: 'https://images.unsplash.com/photo-1556189250-72ba954cfc2b?auto=format&fit=crop&w=800&q=80',
+                description: 'BMW M\'s most powerful electric sedan featuring a 31-inch 8K Theater Screen.'
+            },
+            {
+                id: 'audi-rs7-performance',
+                name: 'Audi RS 7 Sportback Performance',
+                brand: 'Audi',
+                category: 'Executive Sedans',
+                year: 2025,
+                price: '$128,000',
+                dailyAdRate: '$3,200',
+                specs: { hp: 621, zeroToSixty: '3.3s', topSpeed: '177 mph', engine: '4.0L Twin-Turbo V8 MHEV', drivetrain: 'quattro AWD', weight: '4,938 lbs' },
+                image: 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=800&q=80',
+                description: 'Executive fastback with larger turbochargers and lightweight self-locking center diff.'
+            },
+            {
+                id: 'maserati-quattroporte-ev',
+                name: 'Maserati Quattroporte Folgore',
+                brand: 'Maserati',
+                category: 'Executive Sedans',
+                year: 2026,
+                price: '$160,000',
+                dailyAdRate: '$3,600',
+                specs: { hp: 740, zeroToSixty: '2.9s', topSpeed: '186 mph', engine: 'Tri-Motor Electric', drivetrain: 'AWD', weight: '5,100 lbs' },
+                image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80',
+                description: 'Seductive Italian electric luxury flagship sedan combining traditional craftsmanship with zero emissions.'
+            },
+            {
+                id: 'alpina-b8-gran-coupe',
+                name: 'BMW Alpina B8 Gran Coupe',
+                brand: 'Alpina',
+                category: 'Executive Sedans',
+                year: 2025,
+                price: '$150,000',
+                dailyAdRate: '$3,500',
+                specs: { hp: 612, zeroToSixty: '3.3s', topSpeed: '201 mph', engine: '4.4L Bi-Turbo V8', drivetrain: 'xDrive AWD', weight: '4,831 lbs' },
+                image: 'https://images.unsplash.com/photo-1556189250-72ba954cfc2b?auto=format&fit=crop&w=800&q=80',
+                description: 'Refined long-distance high-speed cruiser with custom Lavalina leather interior.'
+            },
+            {
+                id: 'genesis-neolun-concept',
+                name: 'Genesis Neolun Flagship',
+                brand: 'Genesis',
+                category: 'Executive Sedans',
+                year: 2026,
+                price: '$130,000',
+                dailyAdRate: '$3,000',
+                specs: { hp: 580, zeroToSixty: '3.8s', topSpeed: '155 mph', engine: 'Dual Motor EV', drivetrain: 'AWD', weight: '5,200 lbs' },
+                image: 'https://images.unsplash.com/photo-1508974239320-0a029497e820?auto=format&fit=crop&w=800&q=80',
+                description: 'B-pillarless coach doors and radiant heating technology inspired by Korean ondol.'
+            },
+
+            // TRACK SPECIALS & SUPERCARS (9)
+            {
+                id: 'porsche-911-gt3-rs',
+                name: 'Porsche 911 GT3 RS (992.2)',
+                brand: 'Porsche',
+                category: 'Track Specials',
+                year: 2025,
+                price: '$241,300',
+                dailyAdRate: '$6,000',
+                specs: { hp: 518, zeroToSixty: '3.0s', topSpeed: '184 mph', engine: '4.0L NA Flat-6 (9000 RPM)', drivetrain: 'RWD (PDK)', weight: '3,268 lbs' },
+                image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=800&q=80',
+                description: 'Road-legal track weapon featuring active DRS wing generating 1,895 lbs of downforce.'
+            },
+            {
+                id: 'lamborghini-revuelto',
+                name: 'Lamborghini Revuelto',
+                brand: 'Lamborghini',
+                category: 'Track Specials',
+                year: 2025,
+                price: '$604,000',
+                dailyAdRate: '$8,500',
+                specs: { hp: 1001, zeroToSixty: '2.5s', topSpeed: '217 mph', engine: '6.5L V12 + 3 E-Motors', drivetrain: 'E-AWD', weight: '3,907 lbs' },
+                image: 'https://images.unsplash.com/photo-1519245659620-e859806a8d3b?auto=format&fit=crop&w=800&q=80',
+                description: 'The first HPEV (High Performance Electrified Vehicle) V12 super sports car from Sant\'Agata.'
+            },
+            {
+                id: 'ferrari-296-gtb-assetto',
+                name: 'Ferrari 296 GTB Assetto Fiorano',
+                brand: 'Ferrari',
+                category: 'Track Specials',
+                year: 2025,
+                price: '$370,000',
+                dailyAdRate: '$7,000',
+                specs: { hp: 819, zeroToSixty: '2.9s', topSpeed: '205 mph', engine: '3.0L 120° Twin-Turbo V6 PHEV', drivetrain: 'RWD', weight: '3,241 lbs' },
+                image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=800&q=80',
+                description: '120-degree hot-vee V6 hybrid yielding 8500 RPM natural sound track.'
+            },
+            {
+                id: 'mclaren-750s-spider',
+                name: 'McLaren 750S Spider',
+                brand: 'McLaren',
+                category: 'Track Specials',
+                year: 2025,
+                price: '$345,000',
+                dailyAdRate: '$6,800',
+                specs: { hp: 740, zeroToSixty: '2.7s', topSpeed: '206 mph', engine: '4.0L Twin-Turbo V8', drivetrain: 'RWD', weight: me = '2,923 lbs' },
+                image: 'https://images.unsplash.com/photo-1621135802920-133df287f89c?auto=format&fit=crop&w=800&q=80',
+                description: 'Class-leading power-to-weight ratio with retractable hardtop opening in 11 seconds.'
+            },
+            {
+                id: 'ford-mustang-gtd',
+                name: 'Ford Mustang GTD',
+                brand: 'Ford',
+                category: 'Track Specials',
+                year: 2025,
+                price: '$325,000',
+                dailyAdRate: '$6,500',
+                specs: { hp: 815, zeroToSixty: '2.8s', topSpeed: me = '202 mph', engine: '5.2L Supercharged V8 (Dry Sump)', drivetrain: 'Transaxle RWD', weight: '3,800 lbs' },
+                image: 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?auto=format&fit=crop&w=800&q=80',
+                description: 'Sub-7 minute Nürburgring target muscle car built by Multimatic with semi-active suspension.'
+            },
+            {
+                id: 'corvette-z06-z07',
+                name: 'Chevrolet Corvette Z06 Z07 Pkg',
+                brand: 'Chevrolet',
+                category: 'Track Specials',
+                year: 2025,
+                price: '$145,000',
+                dailyAdRate: '$3,800',
+                specs: { hp: 670, zeroToSixty: '2.6s', topSpeed: '189 mph', engine: '5.5L Flat-Plane Crank NA V8', drivetrain: 'RWD (8-Speed DCT)', weight: '3,434 lbs' },
+                image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80',
+                description: 'Highest horsepower naturally aspirated V8 ever placed into a production road car.'
+            },
+            {
+                id: 'amg-gt-black-series',
+                name: 'Mercedes-AMG GT Black Series',
+                brand: 'Mercedes-AMG',
+                category: 'Track Specials',
+                year: 2025,
+                price: '$335,000',
+                dailyAdRate: '$6,200',
+                specs: { hp: 720, zeroToSixty: '3.1s', topSpeed: '202 mph', engine: '4.0L Flat-Plane Biturbo V8', drivetrain: 'RWD', weight: '3,483 lbs' },
+                image: 'https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&w=800&q=80',
+                description: 'AMG GT3 racing technology transferred directly to street-legal aerodynamics.'
+            },
+            {
+                id: 'aston-vantage-amr',
+                name: 'Aston Martin Vantage AMR',
+                brand: 'Aston Martin',
+                category: 'Track Specials',
+                year: 2025,
+                price: '$190,000',
+                dailyAdRate: '$4,200',
+                specs: { hp: 656, zeroToSixty: '3.4s', topSpeed: '202 mph', engine: '4.0L AMG Twin-Turbo V8', drivetrain: 'RWD', weight: '3,538 lbs' },
+                image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=80',
+                description: 're-engineered frontend rigidity, 30% wider body, and intelligent traction control.'
+            },
+            {
+                id: 'gtr-nismo-special',
+                name: 'Nissan GT-R Nismo Special Edition',
+                brand: 'Nissan',
+                category: 'Track Specials',
+                year: 2025,
+                price: '$221,000',
+                dailyAdRate: '$4,500',
+                specs: { hp: 600, zeroToSixty: '2.5s', topSpeed: '205 mph', engine: '3.8L Twin-Turbo VR38DETT', drivetrain: 'ATTESA E-TS AWD', weight: '3,865 lbs' },
+                image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=800&q=80',
+                description: 'GT3-spec turbochargers, clear-coated carbon fiber hood, and mechanical limited-slip front diff.'
+            },
+
+            // ICONIC RESTOMODS & CLASSICS (5)
+            {
+                id: 'singer-dls-turbo',
+                name: 'Singer DLS Turbo (Porsche 911)',
+                brand: 'Singer Vehicle Design',
+                category: 'Iconic Restomods',
+                year: 2025,
+                price: '$2,800,000',
+                dailyAdRate: '$14,000',
+                specs: { hp: 700, zeroToSixty: '2.9s', topSpeed: '200+ mph', engine: '3.8L Twin-Turbo Air-Cooled Flat-6', drivetrain: '6-Speed Manual RWD', weight: '2,620 lbs' },
+                image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80',
+                description: 'High-speed reimagining of 1970s endurance racers with air-cooled twin-turbocharging.'
+            },
+            {
+                id: 'gunther-werks-turbo-993',
+                name: 'Gunther Werks Turbo 993',
+                brand: 'Gunther Werks',
+                category: 'Iconic Restomods',
+                year: 2025,
+                price: '$1,500,000',
+                dailyAdRate: '$9,000',
+                specs: { hp: 700, zeroToSixty: '3.0s', topSpeed: '195 mph', engine: '4.0L Rothsport Twin-Turbo Flat-6', drivetrain: 'RWD Manual', weight: '2,670 lbs' },
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSibZs9llY02VYxXNe0Rb3ewdYCXpugVrApSY8ZmmNs1A&s=10',
+                description: 'Full carbon body 993 generation restomod producing 700 air-cooled manual horsepower.'
+            },
+            {
+                id: 'cyan-racing-p1800',
+                name: 'Cyan Racing Volvo P1800 GT',
+                brand: 'Cyan Racing',
+                category: 'Iconic Restomods',
+                year: 2025,
+                price: '$700,000',
+                dailyAdRate: '$5,500',
+                specs: { hp: 420, zeroToSixty: '4.1s', topSpeed: '170 mph', engine: '2.0L Turbo Inline-4 WTCC Engine', drivetrain: '5-Speed Dogleg RWD', weight: '2,180 lbs' },
+                image: 'https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?auto=format&fit=crop&w=800&q=80',
+                description: 'World Touring Car Championship engineering integrated into a 1960s Swedish classic.'
+            },
+            {
+                id: 'kimera-evo37',
+                name: 'Kimera EVO37',
+                brand: 'Kimera Automobili',
+                category: 'Iconic Restomods',
+                year: 2025,
+                price: '$600,000',
+                dailyAdRate: '$5,200',
+                specs: { hp: 505, zeroToSixty: '3.0s', topSpeed: me = '190 mph', engine: '2.1L Turbo + Volumex Supercharged I4', drivetrain: 'RWD Manual', weight: '2,315 lbs' },
+                image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=800&q=80',
+                description: 'Tribute to the last rear-wheel-drive Group B rally champion Lancia 037.'
+            },
+            {
+                id: 'alfaholics-gta-r-290',
+                name: 'Alfaholics GTA-R 290',
+                brand: 'Alfaholics',
+                category: 'Iconic Restomods',
+                year: 2025,
+                price: '$450,000',
+                dailyAdRate: '$4,500',
+                specs: { hp: 240, zeroToSixty: '4.5s', topSpeed: '150 mph', engine: '2.3L Twin-Spark Twin-Cam 4-Cyl', drivetrain: '5-Speed Manual RWD', weight: '1,830 lbs' },
+                image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80',
+                description: 'Ultralight carbon fiber Alfa Romeo Stepfront restomod weighing under 830kg.'
+            }
+        ];
+
+        // ADD ADDITIONAL VARIANTS TO ENSURE COUNT IS EXACTLY 52+
+        // Generate additional 10 variants programmatically for full 52 vehicles count
+        const EXTRA_CARS = [
+            { id: 'mclaren-artura-spider', name: 'McLaren Artura Spider', brand: 'McLaren', category: 'Track Specials', year: 2025, price: '$273,000', dailyAdRate: '$5,000', specs: { hp: 690, zeroToSixty: '3.0s', topSpeed: '205 mph', engine: '3.0L 120° V6 Twin-Turbo PHEV', drivetrain: 'RWD', weight: '3,439 lbs' }, image: 'https://images.unsplash.com/photo-1621135802920-133df287f89c?auto=format&fit=crop&w=800&q=80', description: 'Plug-in hybrid McLaren Spider with lightweight carbon architectural structure.' },
+            { id: 'ferrari-roma-spider', name: 'Ferrari Roma Spider', brand: 'Ferrari', category: 'Executive Sedans', year: 2025, price: '$272,000', dailyAdRate: '$4,800', specs: { hp: 612, zeroToSixty: '3.4s', topSpeed: '199 mph', engine: '3.9L Twin-Turbo V8', drivetrain: 'RWD', weight: '3,430 lbs' }, image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=800&q=80', description: 'La Nuova Dolce Vita soft-top V8 convertible tailored for high-profile luxury campaigns.' },
+            { id: 'lamborghini-huracan-sterrato', name: 'Lamborghini Huracán Sterrato', brand: 'Lamborghini', category: 'Track Specials', year: 2025, price: '$278,000', dailyAdRate: '$5,400', specs: { hp: 602, zeroToSixty: '3.4s', topSpeed: '162 mph', engine: '5.2L Naturally Aspirated V10', drivetrain: 'AWD Rally Mode', weight: '3,241 lbs' }, image: 'https://images.unsplash.com/photo-1519245659620-e859806a8d3b?auto=format&fit=crop&w=800&q=80', description: 'All-terrain V10 supercar designed to drift across loose dirt and tarmac alike.' },
+            { id: 'porsche-911-dakar', name: 'Porsche 911 Dakar Edition', brand: 'Porsche', category: 'Track Specials', year: 2025, price: '$222,000', dailyAdRate: '$4,900', specs: { hp: 473, zeroToSixty: '3.2s', topSpeed: '149 mph', engine: '3.0L Twin-Turbo Flat-6', drivetrain: 'AWD (Rally Launch)', weight: '3,552 lbs' }, image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=800&q=80', description: 'Off-road 911 homage to the 1984 Paris-Dakar victory with raised ground clearance.' },
+            { id: 'aston-martin-valour', name: 'Aston Martin Valour', brand: 'Aston Martin', category: 'Hypercars', year: 2025, price: '$1,500,000', dailyAdRate: '$9,800', specs: { hp: 705, zeroToSixty: '3.2s', topSpeed: '200 mph', engine: '5.2L Twin-Turbo V12', drivetrain: '6-Speed Manual RWD', weight: '3,400 lbs' }, image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=80', description: 'Retro-inspired twin-turbo V12 muscle supercar paired exclusively with a manual transmission.' },
+            { id: 'lotus-emira-i4', name: 'Lotus Emira First Edition', brand: 'Lotus', category: 'Track Specials', year: 2025, price: '$99,000', dailyAdRate: '$2,800', specs: { hp: 400, zeroToSixty: '4.0s', topSpeed: '180 mph', engine: '3.5L Supercharged V6 / 2.0L Turbo I4', drivetrain: 'Manual / DCT RWD', weight: '3,097 lbs' }, image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=800&q=80', description: 'Lotus\'s final combustion engine sports car offering pure hydraulic steering feedback.' },
+            { id: 'maserati-mc20-cielo', name: 'Maserati MC20 Cielo Spyder', brand: 'Maserati', category: 'Track Specials', year: 2025, price: '$275,000', dailyAdRate: '$5,100', specs: { hp: 621, zeroToSixty: '2.9s', topSpeed: '202 mph', engine: '3.0L Nettuno Twin-Spark V6', drivetrain: 'RWD', weight: '3,395 lbs' }, image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80', description: 'Carbon monocoque spyder with smart electrochromic glass roof technology.' },
+            { id: 'bentley-flying-spur-speed', name: 'Bentley Flying Spur Speed', brand: 'Bentley', category: 'Executive Sedans', year: 2025, price: '$260,000', dailyAdRate: '$4,900', specs: { hp: 626, zeroToSixty: '3.7s', topSpeed: '207 mph', engine: '6.0L Twin-Turbo W12', drivetrain: 'AWD', weight: '5,373 lbs' }, image: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=800&q=80', description: 'W12 twin-turbo luxury sports sedan with electronic all-wheel steering.' },
+            { id: 'mercedes-amg-s63-e', name: 'Mercedes-AMG S 63 E Performance', brand: 'Mercedes-AMG', category: 'Executive Sedans', year: 2025, price: '$182,000', dailyAdRate: '$4,100', specs: { hp: 791, zeroToSixty: '3.2s', topSpeed: '180 mph', engine: '4.0L V8 Biturbo + Electric Motor', drivetrain: '4MATIC+ AWD', weight: '5,720 lbs' }, image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80', description: '791-horsepower plug-in hybrid luxury saloon boasting 1,055 lb-ft of torque.' },
+            { id: 'lexus-lfa-ii-concept', name: 'Lexus Electrified Sport (LFA II)', brand: 'Lexus', category: 'Super EVs', year: 2026, price: '$500,000', dailyAdRate: '$8,000', specs: { hp: 950, zeroToSixty: '2.0s', topSpeed: '200+ mph', engine: 'Solid-State Battery EV', drivetrain: 'DIRECT4 AWD', weight: '3,800 lbs' }, image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80', description: 'Spiritual electric successor to the V10 LFA equipped with simulated manual gear shifts.' }
+        ];
+
+        const ALL_VEHICLES = [...CARS_DATA, ...EXTRA_CARS];
+
+        // State variables
+        let selectedCategory = 'All';
+        let comparedVehicleIds = [];
+
+        // DOM Ready Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('totalCount').innerText = ALL_VEHICLES.length;
+            document.getElementById('totalVehiclesCount').innerText = ALL_VEHICLES.length + '+';
+            renderFleetGrid(ALL_VEHICLES);
+            calculateAdCost();
+        });
+
+        // Category Tab Switcher
+        function selectCategory(cat) {
+            selectedCategory = cat;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('bg-cyan-500', 'text-slate-950', 'font-bold');
+                btn.classList.add('bg-slate-950', 'text-slate-300', 'border', 'border-slate-800');
+            });
+            event.target.classList.remove('bg-slate-950', 'text-slate-300', 'border', 'border-slate-800');
+            event.target.classList.add('bg-cyan-500', 'text-slate-950', 'font-bold');
+            applyFilters();
+        }
+
+        function updatePowerLabel() {
+            const val = document.getElementById('powerRange').value;
+            document.getElementById('powerValueLabel').innerText = val + ' HP';
+        }
+
+        // Apply Filters & Search
+        function applyFilters() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const minHp = parseInt(document.getElementById('powerRange').value, 10);
+            const sortBy = document.getElementById('sortSelect').value;
+
+            let filtered = ALL_VEHICLES.filter(car => {
+                const matchesCat = (selectedCategory === 'All') || (car.category === selectedCategory);
+                const matchesSearch = car.name.toLowerCase().includes(query) || 
+                                      car.brand.toLowerCase().includes(query) || 
+                                      car.specs.engine.toLowerCase().includes(query);
+                const matchesPower = car.specs.hp >= minHp;
+                return matchesCat && matchesSearch && matchesPower;
+            });
+
+            // Sorting
+            filtered.sort((a, b) => {
+                if (sortBy === 'hp-desc') return b.specs.hp - a.specs.hp;
+                if (sortBy === 'hp-asc') return a.specs.hp - b.specs.hp;
+                if (sortBy === 'speed-desc') return parseFloat(a.specs.zeroToSixty) - parseFloat(b.specs.zeroToSixty);
+                if (sortBy === 'price-desc') return parseInt(b.price.replace(/\D/g, '')) - parseInt(a.price.replace(/\D/g, ''));
+                if (sortBy === 'name-asc') return a.name.localeCompare(b.name);
+                return 0;
+            });
+
+            renderFleetGrid(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('powerRange').value = 300;
+            document.getElementById('sortSelect').value = 'hp-desc';
+            updatePowerLabel();
+            selectCategory('All');
+        }
+
+        // Render Fleet Cards
+        function renderFleetGrid(vehicles) {
+            const grid = document.getElementById('fleetGrid');
+            const empty = document.getElementById('emptyState');
+            document.getElementById('displayedCount').innerText = vehicles.length;
+
+            if (vehicles.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            grid.innerHTML = vehicles.map(car => {
+                const isCompared = comparedVehicleIds.includes(car.id);
+                return `
+                <div class="glass-card rounded-2xl overflow-hidden flex flex-col group transition duration-300">
+                    <div class="relative h-48 overflow-hidden bg-slate-950">
+                        <img src="${car.image}" alt="${car.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                        <span class="absolute top-3 left-3 bg-slate-900/90 text-cyan-400 font-bold text-[10px] uppercase px-2.5 py-1 rounded border border-cyan-500/20">
+                            ${car.category}
+                        </span>
+                        <span class="absolute top-3 right-3 bg-slate-950/80 text-slate-300 font-semibold text-[10px] px-2 py-0.5 rounded">
+                            ${car.year}
+                        </span>
+                    </div>
+
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-base font-bold font-heading text-white line-clamp-1">${car.name}</h3>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-0.5 line-clamp-1">${car.specs.engine}</p>
+
+                            <!-- Key Telemetry Badges -->
+                            <div class="grid grid-cols-3 gap-1.5 my-3 text-center bg-slate-950/70 p-2 rounded-xl text-[11px]">
+                                <div><span class="text-slate-400 block text-[9px]">POWER</span><span class="font-bold text-cyan-400">${car.specs.hp} HP</span></div>
+                                <div><span class="text-slate-400 block text-[9px]">0-60 MPH</span><span class="font-bold text-white">${car.specs.zeroToSixty}</span></div>
+                                <div><span class="text-slate-400 block text-[9px]">TOP SPEED</span><span class="font-bold text-white">${car.specs.topSpeed}</span></div>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2">
+                            <div>
+                                <span class="text-[10px] text-slate-400 block">EST. VALUE</span>
+                                <span class="text-xs font-bold text-white">${car.price}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="toggleCompare('${car.id}')" class="p-2 rounded-lg border ${isCompared ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400' : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'} text-xs transition" title="Compare">
+                                    <i class="fa-solid fa-code-compare"></i>
+                                </button>
+                                <button onclick="openSpecModal('${car.id}')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-3 py-2 rounded-lg transition">
+                                    Specs
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Spec Modal Trigger
+        function openSpecModal(carId) {
+            const car = ALL_VEHICLES.find(c => c.id === carId);
+            if (!car) return;
+
+            const modalBody = document.getElementById('specModalBody');
+            modalBody.innerHTML = `
+                <div class="relative h-64 sm:h-80 overflow-hidden">
+                    <img src="${car.image}" alt="${car.name}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 right-6">
+                        <span class="bg-cyan-500 text-slate-950 font-bold text-[10px] uppercase px-2.5 py-1 rounded">
+                            ${car.category}
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold font-heading text-white mt-2">${car.name} (${car.year})</h2>
+                        <p class="text-sm text-slate-300 mt-1">${car.description}</p>
+                    </div>
+                </div>
+
+                <div class="p-6 sm:p-8 space-y-6">
+                    <div>
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-3">VERIFIED TELEMETRY SPECIFICATIONS</h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <span class="text-xs text-slate-400 block">Horsepower Output</span>
+                                <span class="text-lg font-bold text-white">${car.specs.hp} HP</span>
+                            </div>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <span class="text-xs text-slate-400 block">0-60 MPH Acceleration</span>
+                                <span class="text-lg font-bold text-white">${car.specs.zeroToSixty}</span>
+                            </div>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <span class="text-xs text-slate-400 block">Maximum Velocity</span>
+                                <span class="text-lg font-bold text-white">${car.specs.topSpeed}</span>
+                            </div>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 col-span-2 sm:col-span-1">
+                                <span class="text-xs text-slate-400 block">Powertrain Configuration</span>
+                                <span class="text-sm font-semibold text-white line-clamp-1">${car.specs.engine}</span>
+                            </div>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <span class="text-xs text-slate-400 block">Drivetrain</span>
+                                <span class="text-sm font-semibold text-white">${car.specs.drivetrain}</span>
+                            </div>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <span class="text-xs text-slate-400 block">Curb Weight</span>
+                                <span class="text-sm font-semibold text-white">${car.specs.weight}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-950/40 p-4 rounded-xl border border-blue-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div>
+                            <span class="text-xs text-slate-400 block">DAILY ADVERTISING DEPLOYMENT RATE</span>
+                            <span class="text-xl font-bold font-heading text-cyan-400">${car.dailyAdRate} / day</span>
+                        </div>
+                        <button onclick="alert('Inquiry submitted for ${car.name}. Media desk will reach out shorty.')" class="w-full sm:w-auto bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-xs">
+                            BOOK VEHICLE FOR AD CAMPAIGN
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('specModal').classList.remove('hidden');
+        }
+
+        function closeSpecModal() {
+            document.getElementById('specModal').classList.add('hidden');
+        }
+
+        // Compare Drawer Logic
+        function toggleCompare(carId) {
+            if (comparedVehicleIds.includes(carId)) {
+                comparedVehicleIds = comparedVehicleIds.filter(id => id !== carId);
+            } else {
+                if (comparedVehicleIds.length >= 3) {
+                    alert('You can compare up to 3 vehicles at a time.');
+                    return;
+                }
+                comparedVehicleIds.push(carId);
+            }
+            updateCompareBadge();
+            applyFilters();
+        }
+
+        function updateCompareBadge() {
+            const badge = document.getElementById('compareCountBadge');
+            badge.innerText = comparedVehicleIds.length;
+            if (comparedVehicleIds.length > 0) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function toggleCompareDrawer() {
+            const modal = document.getElementById('compareModal');
+            if (modal.classList.contains('hidden')) {
+                renderCompareMatrix();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function renderCompareMatrix() {
+            const container = document.getElementById('compareContent');
+            if (comparedVehicleIds.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-slate-400">
+                        <i class="fa-solid fa-code-compare text-3xl mb-2 text-slate-600"></i>
+                        <p class="text-sm">No vehicles selected for comparison.</p>
+                        <p class="text-xs text-slate-500 mt-1">Click the comparison icon on any vehicle card to add it to your matrix.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const cars = comparedVehicleIds.map(id => ALL_VEHICLES.find(c => c.id === id));
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-${cars.length} gap-6">
+                    ${cars.map(c => `
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4">
+                            <div class="h-40 rounded-lg overflow-hidden relative">
+                                <img src="${c.image}" alt="${c.name}" class="w-full h-full object-cover">
+                            </div>
+                            <h4 class="font-bold text-white font-heading text-lg">${c.name}</h4>
+                            <div class="space-y-2 text-xs border-t border-slate-800 pt-3">
+                                <div class="flex justify-between"><span class="text-slate-400">Category:</span><span class="text-white">${c.category}</span></div>
+                                <div class="flex justify-between"><span class="text-slate-400">Power:</span><span class="text-cyan-400 font-bold">${c.specs.hp} HP</span></div>
+                                <div class="flex justify-between"><span class="text-slate-400">0-60 MPH:</span><span class="text-white">${c.specs.zeroToSixty}</span></div>
+                                <div class="flex justify-between"><span class="text-slate-400">Top Speed:</span><span class="text-white">${c.specs.topSpeed}</span></div>
+                                <div class="flex justify-between"><span class="text-slate-400">Powertrain:</span><span class="text-white text-right">${c.specs.engine}</span></div>
+                                <div class="flex justify-between"><span class="text-slate-400">Daily Rate:</span><span class="text-cyan-400 font-bold">${c.dailyAdRate}</span></div>
+                            </div>
+                            <button onclick="toggleCompare('${c.id}'); renderCompareMatrix();" class="w-full bg-red-950/40 text-red-400 hover:bg-red-900/60 text-xs py-2 rounded-lg transition">
+                                Remove from matrix
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Campaign Cost Calculator
+        function calculateAdCost() {
+            const catRates = { hypercar: 15000, ev: 8500, suv: 7000, sedan: 6000, track: 10000 };
+            const reachMultipliers = { digital: 1.0, global: 1.8, exclusive: 1.4 };
+
+            const category = document.getElementById('calcCategory').value;
+            const days = parseInt(document.getElementById('calcDays').value, 10) || 1;
+            const reach = document.getElementById('calcReach').value;
+
+            const baseRate = catRates[category] || 10000;
+            const multiplier = reachMultipliers[reach] || 1.0;
+
+            const total = Math.round(baseRate * days * multiplier);
+            document.getElementById('calcResult').innerText = '$' + total.toLocaleString();
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

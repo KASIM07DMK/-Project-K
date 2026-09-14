@@ -1,0 +1,2849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOVA.TECH — 3D Automotive Advertising & Fleet Showcase</title>
+  
+  <!-- Google Fonts & CDN Libraries -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;700;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Three.js + OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  
+  <!-- Lucide Icons & Confetti -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-card: rgba(16, 20, 30, 0.75);
+      --bg-card-hover: rgba(22, 28, 44, 0.9);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(0, 240, 255, 0.4);
+      --neon-cyan: #00f0ff;
+      --neon-purple: #9d4edd;
+      --neon-amber: #ffaa00;
+      --neon-red: #ff3366;
+      --text-main: #f0f4f8;
+      --text-muted: #8a99ad;
+      --font-display: 'Outfit', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: #1f2738; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(7, 9, 14, 0.85);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 3rem;
+      transition: all 0.3s ease;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.5rem;
+      letter-spacing: -0.03em;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand-logo .dot {
+      color: var(--neon-cyan);
+      text-shadow: 0 0 12px var(--neon-cyan);
+    }
+
+    .badge-live {
+      background: rgba(0, 240, 255, 0.12);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--neon-cyan);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Buttons */
+    .btn {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      border: none;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .btn-neon {
+      background: var(--neon-cyan);
+      color: #040910;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
+    }
+
+    .btn-neon:hover {
+      background: #4df3ff;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Hero & 3D Stage Section */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 7rem 3rem 3rem 3rem;
+      overflow: hidden;
+    }
+
+    #canvas3d-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 650px;
+      pointer-events: none;
+    }
+
+    .hero-content * {
+      pointer-events: auto;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+      background: linear-gradient(135deg, #ffffff 40%, #8ca6c7 100%);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      max-width: 520px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+      background: rgba(10, 14, 22, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.25rem 1.75rem;
+      max-width: 680px;
+    }
+
+    .stat-box h4 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--neon-cyan);
+    }
+
+    .stat-box p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* 3D Studio Floating Controls */
+    .studio-dock {
+      position: absolute;
+      right: 3rem;
+      bottom: 3rem;
+      z-index: 15;
+      background: rgba(12, 16, 26, 0.85);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(16px);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      width: 320px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .dock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    .dock-header h3 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dock-section h5 {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      font-family: var(--font-mono);
+    }
+
+    .color-swatches {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .color-pill {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .color-pill:hover, .color-pill.active {
+      transform: scale(1.15);
+      border-color: #fff;
+    }
+
+    .dock-toggles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .dock-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+
+    .dock-btn.active {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+    }
+
+    .camera-presets {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .camera-presets button {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      padding: 0.35rem 0;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .camera-presets button:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    /* Section Styling */
+    section {
+      padding: 6rem 3rem;
+      position: relative;
+    }
+
+    .section-header {
+      margin-bottom: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .section-subtitle {
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    /* Fleet Filter & Controls Bar */
+    .filter-bar {
+      background: rgba(14, 18, 28, 0.85);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      min-width: 280px;
+    }
+
+    .search-box input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+
+    .category-pills {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .pill:hover, .pill.active {
+      background: var(--neon-cyan);
+      color: #050b14;
+      border-color: var(--neon-cyan);
+    }
+
+    .filter-dropdowns {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .custom-select {
+      background: #0f1422;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.55rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Fleet Grid (50+ Cars) */
+    .fleet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.75rem;
+    }
+
+    .car-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .car-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-active);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 240, 255, 0.12);
+    }
+
+    .car-badge {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--neon-cyan);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+
+    .car-visual {
+      height: 180px;
+      background: radial-gradient(circle at center, #1b2438 0%, #0c101a 80%);
+      border-radius: 10px;
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .car-visual .car-icon-graphic {
+      width: 140px;
+      opacity: 0.85;
+      transition: transform 0.3s ease;
+    }
+
+    .car-card:hover .car-visual .car-icon-graphic {
+      transform: scale(1.08) translateX(6px);
+    }
+
+    .car-category {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--neon-purple);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.25rem;
+    }
+
+    .car-name {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .car-tagline {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      height: 2.4rem;
+      overflow: hidden;
+      display: -webkit-box;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    /* Specs mini grid */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.85rem;
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+    }
+
+    .spec-item {
+      text-align: center;
+    }
+
+    .spec-val {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #fff;
+    }
+
+    .spec-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .car-footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .car-price {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--neon-cyan);
+    }
+
+    .car-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: var(--neon-cyan);
+      color: #000;
+      border-color: var(--neon-cyan);
+    }
+
+    .btn-icon.active {
+      background: var(--neon-purple);
+      color: #fff;
+      border-color: var(--neon-purple);
+    }
+
+    /* Comparison Bar Sticky Dock */
+    #compare-dock {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(150%);
+      background: rgba(14, 18, 30, 0.95);
+      border: 1px solid var(--neon-cyan);
+      box-shadow: 0 10px 30px rgba(0, 240, 255, 0.25);
+      border-radius: 999px;
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      z-index: 90;
+      backdrop-filter: blur(20px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #compare-dock.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .compare-cars-list {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .compare-chip {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .compare-chip span {
+      cursor: pointer;
+      opacity: 0.6;
+    }
+    .compare-chip span:hover { opacity: 1; color: var(--neon-red); }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(4, 6, 10, 0.85);
+      backdrop-filter: blur(16px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #0d121f;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2.5rem;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+
+    .modal-close:hover { color: #fff; }
+
+    /* Spec Matrix Table */
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+
+    .spec-table th, .spec-table td {
+      padding: 0.85rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .spec-table th {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    .winner-val {
+      color: var(--neon-cyan);
+      font-weight: 800;
+    }
+
+    /* Ad Agency Showcase & Services */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 2rem;
+      border-radius: 16px;
+      transition: all 0.3s;
+    }
+
+    .service-card:hover {
+      border-color: var(--neon-cyan);
+      transform: translateY(-4px);
+    }
+
+    .service-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--neon-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Campaign Estimator Calculator */
+    .calc-card {
+      background: linear-gradient(145deg, #0e1322, #080b12);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      margin-top: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .calc-summary {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .calc-total {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--neon-cyan);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      nav { padding: 1rem 1.5rem; }
+      #hero { padding: 6rem 1.5rem 2rem 1.5rem; }
+      .studio-dock { position: relative; right: auto; bottom: auto; width: 100%; margin-top: 2rem; }
+      .calc-card { grid-template-columns: 1fr; }
+      section { padding: 4rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <a href="#" class="brand-logo">
+      <span>NOVA<span class="dot">.TECH</span></span>
+      <span class="badge-live">Automotive 3D Labs</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#hero">3D Studio</a></li>
+      <li><a href="#fleet">Fleet (50+)</a></li>
+      <li><a href="#agency">Ad Agency</a></li>
+      <li><a href="#estimator">Campaign Estimator</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn btn-glass" id="audio-toggle-btn" title="Toggle Ambient Audio Synth">
+        <i data-lucide="volume-2"></i> Audio FX
+      </button>
+      <a href="#estimator" class="btn btn-neon">Launch Campaign</a>
+    </div>
+  </nav>
+
+  <!-- Hero & Interactive 3D Showroom -->
+  <div id="hero">
+    <!-- WebGL Canvas Container -->
+    <div id="canvas3d-container"></div>
+
+    <div class="hero-content">
+      <div class="hero-tag">
+        <i data-lucide="sparkles" size="16"></i> Realtime WebGL Showroom & CGI Production
+      </div>
+      <h1 class="hero-title">NEXT-GEN AUTOMOTIVE ADVERTISING LABS.</h1>
+      <p class="hero-desc">
+        We engineer hyper-photorealistic 3D interactive car commercials, virtual showrooms, and spatial marketing experiences for the world's most visionary automotive brands.
+      </p>
+      <div class="hero-cta" style="display:flex; gap:1rem;">
+        <a href="#fleet" class="btn btn-neon">
+          <i data-lucide="grid"></i> Explore 50+ Fleet
+        </a>
+        <button class="btn btn-glass" onclick="focusCameraPreset('front')">
+          <i data-lucide="crosshair"></i> Exterior View
+        </button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-box">
+          <h4 id="stat-cars">52</h4>
+          <p>Fleet Assets</p>
+        </div>
+        <div class="stat-box">
+          <h4>$1.8B+</h4>
+          <p>Media Managed</p>
+        </div>
+        <div class="stat-box">
+          <h4>99.8%</h4>
+          <p>Photoreal CGI</p>
+        </div>
+        <div class="stat-box">
+          <h4>120 FPS</h4>
+          <p>WebGL Engine</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D Studio Configurator Dock -->
+    <div class="studio-dock">
+      <div class="dock-header">
+        <h3><i data-lucide="sliders" size="18"></i> 3D Studio Config</h3>
+        <span class="badge-live" id="car-name-dock">Nova Apex V16</span>
+      </div>
+
+      <div class="dock-section">
+        <h5>Metallic Paint Finish</h5>
+        <div class="color-swatches">
+          <div class="color-pill active" style="background: #a0aab8;" title="Liquid Chrome" onclick="changeCarColor(0xa0aab8, this)"></div>
+          <div class="color-pill" style="background: #00f0ff;" title="Cyber Teal" onclick="changeCarColor(0x00f0ff, this)"></div>
+          <div class="color-pill" style="background: #ff1e46;" title="Hyper Crimson" onclick="changeCarColor(0xff1e46, this)"></div>
+          <div class="color-pill" style="background: #11141c;" title="Obsidian Shadow" onclick="changeCarColor(0x11141c, this)"></div>
+          <div class="color-pill" style="background: #ffb703;" title="Solar Gold" onclick="changeCarColor(0xffb703, this)"></div>
+          <div class="color-pill" style="background: #0d47a1;" title="Monaco Blue" onclick="changeCarColor(0x0d47a1, this)"></div>
+        </div>
+      </div>
+
+      <div class="dock-section">
+        <h5>Lighting & Shaders</h5>
+        <div class="dock-toggles">
+          <button class="dock-btn active" id="btn-headlights" onclick="toggleHeadlights()">
+            <i data-lucide="sun" size="14"></i> Headlights
+          </button>
+          <button class="dock-btn active" id="btn-underglow" onclick="toggleUnderglow()">
+            <i data-lucide="zap" size="14"></i> Underglow
+          </button>
+          <button class="dock-btn" id="btn-wireframe" onclick="toggleWireframe()">
+            <i data-lucide="grid" size="14"></i> Wireframe
+          </button>
+          <button class="dock-btn active" id="btn-turntable" onclick="toggleTurntable()">
+            <i data-lucide="rotate-cw" size="14"></i> Turntable
+          </button>
+        </div>
+      </div>
+
+      <div class="dock-section">
+        <h5>Camera Angles</h5>
+        <div class="camera-presets">
+          <button onclick="focusCameraPreset('iso')">3/4 Hero</button>
+          <button onclick="focusCameraPreset('front')">Front</button>
+          <button onclick="focusCameraPreset('side')">Profile</button>
+          <button onclick="focusCameraPreset('top')">Aero Top</button>
+        </div>
+      </div>
+
+      <button class="btn btn-neon" style="width:100%; justify-content:center;" onclick="playCarAudio('rev')">
+        <i data-lucide="activity"></i> Rev Engine Sound FX
+      </button>
+    </div>
+  </div>
+
+  <!-- Fleet Showcase (50+ Vehicles) -->
+  <section id="fleet">
+    <div class="section-header">
+      <div>
+        <div class="section-subtitle">Comprehensive Automotive Database</div>
+        <h2 class="section-title">THE 50+ VEHICLE COLLECTION</h2>
+      </div>
+      <div>
+        <span style="color: var(--text-muted); font-size: 0.9rem;">
+          Showing <strong id="car-count-label" style="color: var(--neon-cyan);">52</strong> Vehicles Available for Advertising Production
+        </span>
+      </div>
+    </div>
+
+    <!-- Search & Filter Bar -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <i data-lucide="search" size="18" style="color: var(--text-muted);"></i>
+        <input type="text" id="fleet-search" placeholder="Search by model, engine, or category..." oninput="filterCars()" />
+      </div>
+
+      <div class="category-pills" id="category-filter-container">
+        <button class="pill active" onclick="setCategoryFilter('all', this)">All (52)</button>
+        <button class="pill" onclick="setCategoryFilter('Hypercar', this)">Hypercars</button>
+        <button class="pill" onclick="setCategoryFilter('Electric EV', this)">Electric EVs</button>
+        <button class="pill" onclick="setCategoryFilter('Luxury GT', this)">Luxury GT</button>
+        <button class="pill" onclick="setCategoryFilter('Cyber SUV', this)">Cyber SUVs</button>
+        <button class="pill" onclick="setCategoryFilter('Track Beast', this)">Track Beasts</button>
+        <button class="pill" onclick="setCategoryFilter('Vision Concept', this)">Concepts</button>
+      </div>
+
+      <div class="filter-dropdowns">
+        <select class="custom-select" id="powertrain-filter" onchange="filterCars()">
+          <option value="all">Powertrain: All</option>
+          <option value="Electric">Pure Electric (EV)</option>
+          <option value="Hybrid">Hybrid Powertrain</option>
+          <option value="V8">V8 Twin-Turbo</option>
+          <option value="V12">V12 Naturally Aspirated</option>
+          <option value="W16">W16 Quad-Turbo</option>
+        </select>
+
+        <select class="custom-select" id="sort-filter" onchange="filterCars()">
+          <option value="hp-desc">Horsepower: High to Low</option>
+          <option value="speed-desc">Top Speed: Fastest</option>
+          <option value="accel-asc">0-60 mph: Quickest</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="price-asc">Price: Low to High</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Cars Grid Container -->
+    <div class="fleet-grid" id="fleet-container">
+      <!-- Injected via JavaScript (52 complete cars) -->
+    </div>
+  </section>
+
+  <!-- Comparison Sticky Dock -->
+  <div id="compare-dock">
+    <div style="display:flex; align-items:center; gap:0.5rem;">
+      <i data-lucide="git-compare" size="18" style="color: var(--neon-cyan);"></i>
+      <span style="font-weight:700; font-size:0.9rem;">Compare (<span id="compare-count">0</span>/3):</span>
+    </div>
+    <div class="compare-cars-list" id="compare-chips"></div>
+    <button class="btn btn-neon" style="padding:0.45rem 1.2rem; font-size:0.8rem;" onclick="openCompareModal()">
+      View Matrix
+    </button>
+  </div>
+
+  <!-- Advertising Agency Capabilities -->
+  <section id="agency" style="background: rgba(10, 14, 24, 0.5);">
+    <div class="section-header">
+      <div>
+        <div class="section-subtitle">Commercial Agency Solutions</div>
+        <h2 class="section-title">ADVERTISING & VIRTUAL CGI SERVICES</h2>
+      </div>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon"><i data-lucide="video" size="26"></i></div>
+        <h3 style="font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 0.5rem;">8K Cinematic CGI Commercials</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          End-to-end commercial film generation using high-fidelity raytraced Unreal Engine 5.4 & Octane pipelines. Perfect for broadcast TV and worldwide digital rollouts.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon"><i data-lucide="box" size="26"></i></div>
+        <h3 style="font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 0.5rem;">Realtime 3D Web Configurator</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Embed our 120 FPS Three.js / WebGL interactive visualizers into your OEM website. Customers customize paint, carbon packs, and interior materials in real time.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon"><i data-lucide="camera" size="26"></i></div>
+        <h3 style="font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 0.5rem;">Virtual LED Volume Stages</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          In-camera visual effects (ICVFX) with full-scale curved LED volumes for automotive shoots. Eliminate costly outdoor locations with dynamic photoreal environments.
+        </p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon"><i data-lucide="glasses" size="26"></i></div>
+        <h3 style="font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 0.5rem;">Spatial Computing & WebXR</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Native 1:1 scale immersive automotive apps for Apple Vision Pro and Meta Quest 3, allowing prospective buyers to inspect vehicle interiors from anywhere in the world.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Campaign Cost Estimator -->
+  <section id="estimator">
+    <div class="section-header">
+      <div>
+        <div class="section-subtitle">Real-Time Project Quote</div>
+        <h2 class="section-title">CAMPAIGN BUDGET ESTIMATOR</h2>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div>
+        <h3 style="font-family:var(--font-display); margin-bottom:1.5rem;">Campaign Parameters</h3>
+        
+        <div class="form-group">
+          <label>Selected Vehicle Asset</label>
+          <select class="custom-select" id="calc-car-select" style="width:100%;" onchange="calculateQuote()">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Campaign Production Tier</label>
+          <select class="custom-select" id="calc-tier-select" style="width:100%;" onchange="calculateQuote()">
+            <option value="standard">Standard Digital Ads (1080p CGI + Social Assets)</option>
+            <option value="premium" selected>Premium Commercial Package (4K CGI + WebGL Configurator)</option>
+            <option value="enterprise">Global Launch Tier (8K IMAX Film + Vision Pro AR + Global Media)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Deliverable Deliverables</label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-top:0.4rem;">
+            <label style="font-size:0.85rem; color:#fff; display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
+              <input type="checkbox" id="deliv-webgl" checked onchange="calculateQuote()"> 3D WebGL Configurator
+            </label>
+            <label style="font-size:0.85rem; color:#fff; display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
+              <input type="checkbox" id="deliv-social" checked onchange="calculateQuote()"> 9:16 TikTok/Reels CGI
+            </label>
+            <label style="font-size:0.85rem; color:#fff; display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
+              <input type="checkbox" id="deliv-xr" onchange="calculateQuote()"> Apple Vision Pro Spatial App
+            </label>
+            <label style="font-size:0.85rem; color:#fff; display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
+              <input type="checkbox" id="deliv-sound" checked onchange="calculateQuote()"> Custom Binaural Sound Design
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Delivery Timeline</label>
+          <select class="custom-select" id="calc-time-select" style="width:100%;" onchange="calculateQuote()">
+            <option value="expedited">Expedited Sprint (2 Weeks)</option>
+            <option value="standard" selected>Standard Production (4 Weeks)</option>
+            <option value="relaxed">Extended Narrative (8 Weeks)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="calc-summary">
+        <div>
+          <div style="font-size:0.85rem; font-family:var(--font-mono); color:var(--neon-cyan); margin-bottom:0.5rem;">
+            ESTIMATED CAMPAIGN INVESTMENT
+          </div>
+          <div class="calc-total" id="calc-total-display">$145,000</div>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-top:0.5rem;">
+            Includes full licensing rights, 8K raytraced master exports, web deployment CDN hosting, and dedicated technical director.
+          </p>
+        </div>
+
+        <div style="margin-top:2rem;">
+          <button class="btn btn-neon" style="width:100%; justify-content:center; padding:1rem;" onclick="submitCampaignRequest()">
+            <i data-lucide="send"></i> Request Formal Proposal & Assets
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Car Detailed Specs Modal -->
+  <div class="modal-overlay" id="spec-modal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeSpecModal()">&times;</button>
+      <div id="modal-spec-content"></div>
+    </div>
+  </div>
+
+  <!-- Comparison Matrix Modal -->
+  <div class="modal-overlay" id="compare-modal">
+    <div class="modal-card" style="max-width:1050px;">
+      <button class="modal-close" onclick="closeCompareModal()">&times;</button>
+      <h2 style="font-family:var(--font-display); font-size:1.8rem; margin-bottom:0.5rem;">
+        <i data-lucide="git-compare" style="color:var(--neon-cyan);"></i> SIDE-BY-SIDE SPECIFICATION MATRIX
+      </h2>
+      <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.5rem;">
+        Direct comparative benchmarks across powertrain, performance dynamics, curb weight, and price.
+      </p>
+      <div id="compare-matrix-content"></div>
+    </div>
+  </div>
+
+  <!-- JavaScript Code: Database of 52 Vehicles + Three.js 3D Visualizer + Controllers -->
+  <script>
+    // ==========================================
+    // 1. VEHICLE DATABASE: 52 DISTINCT VEHICLES
+    // ==========================================
+    const FLEET_DATABASE = [
+      {
+        id: 1,
+        name: "Nova Apex V16",
+        category: "Hypercar",
+        tagline: "Quad-Turbo 16-Cylinder Monocoque Masterpiece",
+        hp: 1600,
+        zeroSixty: 2.1,
+        topSpeed: 304,
+        torque: 1180,
+        powertrain: "8.0L Quad-Turbo W16",
+        transmission: "7-Speed Dual-Clutch AWD",
+        weight: 4350,
+        drag: 0.35,
+        price: 3800000,
+        features: ["Active Aero Wings", "Carbon Monocoque", "Titanium Exhaust", "Launch Control V3"],
+        soundType: "v16"
+      },
+      {
+        id: 2,
+        name: "Nova Electron S",
+        category: "Electric EV",
+        tagline: "Ultra-High Voltage Quad-Motor Hyper-Sedan",
+        hp: 1200,
+        zeroSixty: 1.88,
+        topSpeed: 255,
+        torque: 1050,
+        powertrain: "Quad Permanent-Magnet Electric Motors",
+        transmission: "Direct Drive Dual-Axle Torque Vectoring",
+        weight: 4680,
+        drag: 0.208,
+        price: 240000,
+        features: ["900V Silicon-Carbide Architecture", "Neural Autopilot Level 3", "Active Aero Diffuser"],
+        soundType: "electric"
+      },
+      {
+        id: 3,
+        name: "Valkyrie Phantom",
+        category: "Hypercar",
+        tagline: "Naturally Aspirated 11,100 RPM V12 Track Weapon",
+        hp: 1450,
+        zeroSixty: 2.2,
+        topSpeed: 285,
+        torque: 880,
+        powertrain: "6.5L Naturally Aspirated V12 Hybrid",
+        transmission: "7-Speed Paddle-Shift Sequential",
+        weight: 2950,
+        drag: 0.33,
+        price: 3200000,
+        features: ["F1-Derived Ground Effect Venturis", "KERS Hybrid Boost", "Centerlock Magnesium Rims"],
+        soundType: "v12"
+      },
+      {
+        id: 4,
+        name: "Chimera GT-R",
+        category: "Track Beast",
+        tagline: "FIA-GT3 Homologated Competition Machine",
+        hp: 1100,
+        zeroSixty: 2.3,
+        topSpeed: 235,
+        torque: 820,
+        powertrain: "4.0L Twin-Turbo Flat-Six Hybrid",
+        transmission: "6-Speed Dog-Ring Sequential",
+        weight: 2780,
+        drag: 0.42,
+        price: 1650000,
+        features: ["Swan-Neck Dual DRS Rear Wing", "Air Jack System", "Telemetry Uplink HUD"],
+        soundType: "v8"
+      },
+      {
+        id: 5,
+        name: "Sovereign Royal V12",
+        category: "Luxury GT",
+        tagline: "The Pinnacle of Bespoke Handcrafted Grand Touring",
+        hp: 720,
+        zeroSixty: 3.4,
+        topSpeed: 215,
+        torque: 740,
+        powertrain: "6.75L Twin-Turbo V12",
+        transmission: "8-Speed Satellite-Aided Automatic",
+        weight: 5600,
+        drag: 0.31,
+        price: 480000,
+        features: ["Starlight Headliner", "Whisper-Quiet Active Cabin Cancelling", "Champagne Refrigerator"],
+        soundType: "v12"
+      },
+      {
+        id: 6,
+        name: "Nova Titan 6x6",
+        category: "Cyber SUV",
+        tagline: "Armor-Plated All-Terrain Tri-Axle Conqueror",
+        hp: 950,
+        zeroSixty: 3.9,
+        topSpeed: 160,
+        torque: 990,
+        powertrain: "6.2L Supercharged V8 Hybrid",
+        transmission: "Triple Locking Differential 6WD",
+        weight: 7800,
+        drag: 0.52,
+        price: 395000,
+        features: ["Military Run-Flat Tires", "Thermal Night Vision", "Winch & Snorkel Rig"],
+        soundType: "v8"
+      },
+      {
+        id: 7,
+        name: "Pulse Hyper-GT",
+        category: "Electric EV",
+        tagline: "Carbon-Tub 2+2 Grand Tourer with 500-Mile Range",
+        hp: 1400,
+        zeroSixty: 1.95,
+        topSpeed: 260,
+        torque: 1250,
+        powertrain: "Tri-Motor Solid-State EV",
+        transmission: "Single-Speed High-Reduction",
+        weight: 4400,
+        drag: 0.22,
+        price: 2100000,
+        features: ["Solid-State 135 kWh Pack", "Electrochromic Glass Roof", "Holoscreen Cockpit"],
+        soundType: "electric"
+      },
+      {
+        id: 8,
+        name: "Vortex Mach-1",
+        category: "Hypercar",
+        tagline: "Aerospace-Grade Speed Record Hunter",
+        hp: 1800,
+        zeroSixty: 1.98,
+        topSpeed: 312,
+        torque: 1320,
+        powertrain: "6.6L Twin-Turbo Billet V8",
+        transmission: "7-Speed Dual-Clutch Longitudinal",
+        weight: 3200,
+        drag: 0.28,
+        price: 4200000,
+        features: ["Variable Geometry Aero", "Inconel 3D-Printed Exhaust", "Air-Brake Deployer"],
+        soundType: "v8"
+      },
+      {
+        id: 9,
+        name: "Solis Stradale",
+        category: "Hypercar",
+        tagline: "Mid-Engine V8 Plug-in Hybrid Masterpiece",
+        hp: 1050,
+        zeroSixty: 2.4,
+        topSpeed: 228,
+        torque: 780,
+        powertrain: "4.0L Twin-Turbo V8 + 3 Electric Motors",
+        transmission: "8-Speed F1 Dual-Clutch",
+        weight: 3450,
+        drag: 0.32,
+        price: 1400000,
+        features: ["e-4WD Active Front Axle", "Brembo Carbon Ceramic Extreme", "Touch-Haptic Steering"],
+        soundType: "v8"
+      },
+      {
+        id: 10,
+        name: "Volt Spectre",
+        category: "Electric EV",
+        tagline: "Ultra-Sleek Executive Fastback with Zero Emission Drift Mode",
+        hp: 1020,
+        zeroSixty: 2.05,
+        topSpeed: 210,
+        torque: 920,
+        powertrain: "Tri-Motor Carbon-Sleeved Rotor EV",
+        transmission: "Single Speed AWD",
+        weight: 4760,
+        drag: 0.21,
+        price: 185000,
+        features: ["Track Mode V2", "Yoke Steering with Steer-by-Wire", "22-Speaker Spatial Audio"],
+        soundType: "electric"
+      },
+      {
+        id: 11,
+        name: "Ion Horizon",
+        category: "Electric EV",
+        tagline: "Aerodynamic Cross-Continental Fastback EV",
+        hp: 850,
+        zeroSixty: 2.6,
+        topSpeed: 195,
+        torque: 760,
+        powertrain: "Dual Motor High Efficiency AWD",
+        transmission: "Single Speed AWD",
+        weight: 4500,
+        drag: 0.215,
+        price: 160000,
+        features: ["Solar Roof Charging Panel", "Augmented Reality Windshield HUD", "Adaptive Air Ride"],
+        soundType: "electric"
+      },
+      {
+        id: 12,
+        name: "Quantum Velocity",
+        category: "Electric EV",
+        tagline: "1,900 HP Pure Electric Hypercar with 4 Torque-Vectoring Hubs",
+        hp: 1900,
+        zeroSixty: 1.74,
+        topSpeed: 258,
+        torque: 1740,
+        powertrain: "Quad-Motor In-Wheel Vectoring EV",
+        transmission: "Independent 4-Wheel Direct Torque",
+        weight: 4300,
+        drag: 0.26,
+        price: 2400000,
+        features: ["Individual Wheel Slip Control", "Drift Angle Vectoring", "Formula E Energy Recovery"],
+        soundType: "electric"
+      },
+      {
+        id: 13,
+        name: "Imperium Limousine",
+        category: "Luxury GT",
+        tagline: "Executive Presidential Armored Flagship",
+        hp: 680,
+        zeroSixty: 3.8,
+        topSpeed: 190,
+        torque: 710,
+        powertrain: "6.0L Twin-Turbo V12",
+        transmission: "9-Speed Hydraulic Torque Converter",
+        weight: 6400,
+        drag: 0.36,
+        price: 550000,
+        features: ["VR7 Ballistic Protection", "Private Partition Glass with OLED Display", "Air Purification"],
+        soundType: "v12"
+      },
+      {
+        id: 14,
+        name: "Aether GT",
+        category: "Luxury GT",
+        tagline: "Carbon-Body Lightweight Grand Tourer",
+        hp: 800,
+        zeroSixty: 2.9,
+        topSpeed: 220,
+        torque: 690,
+        powertrain: "5.2L Twin-Turbo V12",
+        transmission: "8-Speed Rear Mid-Mounted Transaxle",
+        weight: 3950,
+        drag: 0.29,
+        price: 340000,
+        features: ["Bridge of Weir Hand-Stitched Leather", "Carbon-Ceramic Calipers", "Launch Mode"],
+        soundType: "v12"
+      },
+      {
+        id: 15,
+        name: "Elysium Pullman",
+        category: "Luxury GT",
+        tagline: "Extended Wheelbase Ultra-Chauffeur Saloon",
+        hp: 600,
+        zeroSixty: 4.1,
+        topSpeed: 175,
+        torque: 660,
+        powertrain: "4.4L Twin-Turbo V8 Mild Hybrid",
+        transmission: "8-Speed Steptronic Automatic",
+        weight: 5900,
+        drag: 0.34,
+        price: 620000,
+        features: ["Zero-Gravity Executive Lounge Seats", "Bowers & Wilkins 4D Audio", "Privacy Blinds"],
+        soundType: "v8"
+      },
+      {
+        id: 16,
+        name: "Apex Terra SUV",
+        category: "Cyber SUV",
+        tagline: "High-Performance Super-SUV with Active Anti-Roll Suspension",
+        hp: 820,
+        zeroSixty: 3.1,
+        topSpeed: 190,
+        torque: 770,
+        powertrain: "4.0L Twin-Turbo V8 Hybrid",
+        transmission: "8-Speed Dual Clutch AWD",
+        weight: 5100,
+        drag: 0.37,
+        price: 225000,
+        features: ["48V Active Roll Stabilization", "Carbon Aero Body Kit", "23-inch Forged Alloy Wheels"],
+        soundType: "v8"
+      },
+      {
+        id: 17,
+        name: "Nomad Cyber-Hauler",
+        category: "Cyber SUV",
+        tagline: "Cold-Rolled Stainless Exoskeleton Electric Truck",
+        hp: 750,
+        zeroSixty: 3.5,
+        topSpeed: 155,
+        torque: 860,
+        powertrain: "Tri-Motor Electric AWD",
+        transmission: "Direct Drive AWD",
+        weight: 6600,
+        drag: 0.39,
+        price: 145000,
+        features: ["Armor Glass Panels", "Vault Bed with 220V Outlets", "Adjustable Air Suspension"],
+        soundType: "electric"
+      },
+      {
+        id: 18,
+        name: "Dune Raptor EV",
+        category: "Cyber SUV",
+        tagline: "Baja 1000 Conqueror with 24 Inches of Wheel Travel",
+        hp: 1000,
+        zeroSixty: 2.9,
+        topSpeed: 165,
+        torque: 1100,
+        powertrain: "Quad-Motor Electric Off-Roader",
+        transmission: "Independent Multi-Speed Hub Reduction",
+        weight: 5800,
+        drag: 0.46,
+        price: 210000,
+        features: ["Fox Live-Valve Dynamic Dampers", "Crab-Walk 4-Wheel Steering", "Underbody Titanium Skid Plates"],
+        soundType: "electric"
+      },
+      {
+        id: 19,
+        name: "Nova LeMans Proto",
+        category: "Track Beast",
+        tagline: "LMDh Hypercar Prototype built for 24-Hour Endurance",
+        hp: 1000,
+        zeroSixty: 2.0,
+        topSpeed: 245,
+        torque: 750,
+        powertrain: "3.5L Twin-Turbo V6 + Bosch MGU Hybrid",
+        transmission: "7-Speed Xtrac Transverse Racing Box",
+        weight: 2270,
+        drag: 0.38,
+        price: 2900000,
+        features: ["Shark Fin Aero Spine", "Full Carbon Tub", "Rapid Refuel & Tire Change Quick Pins"],
+        soundType: "v8"
+      },
+      {
+        id: 20,
+        name: "AeroX Formula-E",
+        category: "Track Beast",
+        tagline: "Gen-3 Open-Cockpit Formula Racing Machine",
+        hp: 800,
+        zeroSixty: 2.1,
+        topSpeed: 200,
+        torque: 600,
+        powertrain: "Dual-Axle Ultra-Efficient Race EV",
+        transmission: "Direct Drive Single Ratio",
+        weight: 1850,
+        drag: 0.36,
+        price: 1200000,
+        features: ["600 kW Fast-Regen Brakes", "Halo Titanium Cockpit Bar", "Telemetry Radio Link"],
+        soundType: "electric"
+      },
+      {
+        id: 21,
+        name: "Nemesis Cup",
+        category: "Track Beast",
+        tagline: "Single-Make Championship Track Special",
+        hp: 920,
+        zeroSixty: 2.4,
+        topSpeed: 215,
+        torque: 710,
+        powertrain: "3.8L Twin-Turbo Boxer 6",
+        transmission: "7-Speed PDK with Sequential Shifter",
+        weight: 2900,
+        drag: 0.40,
+        price: 950000,
+        features: ["FIA Roll Cage", "Lexan Lightweight Windows", "OMP Carbon Race Bucket Seats"],
+        soundType: "v8"
+      },
+      {
+        id: 22,
+        name: "Nova Nebula Autonomous",
+        category: "Vision Concept",
+        tagline: "Self-Driving Lounge with Swiveling Hologram Interior",
+        hp: 1500,
+        zeroSixty: 2.0,
+        topSpeed: 250,
+        torque: 1150,
+        powertrain: "Solid-State Graphene Battery EV",
+        transmission: "Autonomous Drive Vectoring",
+        weight: 4200,
+        drag: 0.19,
+        price: 5000000,
+        features: ["Full Retractable Steering", "LIDAR Sensor Matrix in Glass", "OLED Ceiling Sky Map"],
+        soundType: "electric"
+      },
+      {
+        id: 23,
+        name: "Zero-G Levitron",
+        category: "Vision Concept",
+        tagline: "Aerospace Ground-Effect Magnetic Hover Concept",
+        hp: 2000,
+        zeroSixty: 1.5,
+        topSpeed: 330,
+        torque: 1800,
+        powertrain: "Superconducting Magneto-Hydrodynamic Drive",
+        transmission: "Direct Flux Modulation",
+        weight: 2800,
+        drag: 0.16,
+        price: 7500000,
+        features: ["MagLev Stabilization Blades", "Plasma Boundary Layer Control", "Neural Thought Interface"],
+        soundType: "electric"
+      },
+      {
+        id: 24,
+        name: "Chronos Synapse",
+        category: "Vision Concept",
+        tagline: "Bio-Synthetic Kinetic Energy Storage Hypercar",
+        hp: 1350,
+        zeroSixty: 1.9,
+        topSpeed: 270,
+        torque: 1080,
+        powertrain: "Ultracapacitor Kinetic Hybrid",
+        transmission: "Continuously Variable Magnetic Matrix",
+        weight: 3100,
+        drag: 0.23,
+        price: 4800000,
+        features: ["Shape-Shifting Morphing Rear Flaps", "Synthetic Spider-Silk Bodywork", "Biometric Health Monitor"],
+        soundType: "v12"
+      },
+      {
+        id: 25,
+        name: "Zenith Spydre",
+        category: "Hypercar",
+        tagline: "Open-Top Targa Speedster with Inconel Exhaust Organs",
+        hp: 1250,
+        zeroSixty: 2.3,
+        topSpeed: 265,
+        torque: 960,
+        powertrain: "6.0L Twin-Turbo V12",
+        transmission: "7-Speed Dual-Clutch Transaxle",
+        weight: 3350,
+        drag: 0.34,
+        price: 2850000,
+        features: ["Carbon Fiber Removable Roof Panels", "Pirelli Trofeo R Ultra-Grip", "Active Aero Spoilers"],
+        soundType: "v12"
+      },
+      {
+        id: 26,
+        name: "Kestrel F1-R",
+        category: "Track Beast",
+        tagline: "Formula 1 V6 Hybrid Engine in a Road-Legal Chassis",
+        hp: 1050,
+        zeroSixty: 2.1,
+        topSpeed: 230,
+        torque: 840,
+        powertrain: "1.6L Turbo V6 + 4 Electric Motors (F1 Spec)",
+        transmission: "8-Speed Automated Manual",
+        weight: 3700,
+        drag: 0.35,
+        price: 1750000,
+        features: ["Active Louvers on Front Fenders", "Roof-Mounted Ram Air Scoop", "Pushrod Suspension"],
+        soundType: "v8"
+      },
+      {
+        id: 27,
+        name: "Hyperion Monolith",
+        category: "Cyber SUV",
+        tagline: "Heavy-Duty All-Electric Luxury Overlander",
+        hp: 1150,
+        zeroSixty: 2.8,
+        topSpeed: 180,
+        torque: 1250,
+        powertrain: "Tri-Motor Heavy EV with 180 kWh Battery",
+        transmission: "Dual-Axle Stepped Reduction",
+        weight: 6900,
+        drag: 0.44,
+        price: 290000,
+        features: ["Induction Stove in Trunk", "Camp Mode HVAC System", "360-Degree Drone Scout Bay"],
+        soundType: "electric"
+      },
+      {
+        id: 28,
+        name: "Solaris Coupe",
+        category: "Luxury GT",
+        tagline: "Classic Proportions Reimagined with Modern Carbon Craft",
+        hp: 760,
+        zeroSixty: 3.1,
+        topSpeed: 210,
+        torque: 720,
+        powertrain: "4.0L Twin-Turbo Hot-V V8",
+        transmission: "8-Speed Sport Automatic",
+        weight: 4200,
+        drag: 0.30,
+        price: 295000,
+        features: ["Open-Pore Walnut Wood Trim", "Aluminum Precision Knurled Dials", "Night Driving Vision"],
+        soundType: "v8"
+      },
+      {
+        id: 29,
+        name: "Orion Speedster",
+        category: "Hypercar",
+        tagline: "Windshield-Free Pure Sensory Driving Weapon",
+        hp: 1180,
+        zeroSixty: 2.25,
+        topSpeed: 240,
+        torque: 890,
+        powertrain: "5.2L Naturally Aspirated V10 Hybrid",
+        transmission: "7-Speed Dual-Clutch RWD",
+        weight: 2980,
+        drag: 0.37,
+        price: 2100000,
+        features: ["Virtual Wind Deflector Duct", "Matching Custom Carbon Helmets", "Inconel Flame-Thrower Exhaust"],
+        soundType: "v12"
+      },
+      {
+        id: 30,
+        name: "Eos Electro-Wagon",
+        category: "Electric EV",
+        tagline: "High-Performance Estate with Supercar Acceleration",
+        hp: 670,
+        zeroSixty: 3.2,
+        topSpeed: 170,
+        torque: 680,
+        powertrain: "Dual-Motor Electric AWD",
+        transmission: "Two-Speed Rear Transmission",
+        weight: 4900,
+        drag: 0.25,
+        price: 125000,
+        features: ["Massive Cargo Space", "Roof Ski Box Aero Carrier", "Rear Seat Entertainment Screens"],
+        soundType: "electric"
+      },
+      {
+        id: 31,
+        name: "Tempest R",
+        category: "Track Beast",
+        tagline: "Ultra-Lightweight Hillclimb & Time Attack Legend",
+        hp: 880,
+        zeroSixty: 2.5,
+        topSpeed: 220,
+        torque: 700,
+        powertrain: "3.0L Twin-Turbo Straight-6",
+        transmission: "6-Speed Manual with Rev Matching",
+        weight: 2850,
+        drag: 0.43,
+        price: 820000,
+        features: ["Massive Front Canards", "Carbon-Ceramic Drilled Discs", "FIA Fire Suppression Tank"],
+        soundType: "v8"
+      },
+      {
+        id: 32,
+        name: "Mirage Concept GT",
+        category: "Vision Concept",
+        tagline: "Optical Camouflage Adaptive Carbon Skin Prototype",
+        hp: 1200,
+        zeroSixty: 2.1,
+        topSpeed: 245,
+        torque: 940,
+        powertrain: "Hydrogen Fuel Cell + Ultra-Capacitor",
+        transmission: "Direct Flux Hubs",
+        weight: 3500,
+        drag: 0.20,
+        price: 3500000,
+        features: ["Electro-Chromic Color Changing Panels", "Zero Emission Water Exhaust", "Airless 3D Mesh Tires"],
+        soundType: "electric"
+      },
+      {
+        id: 33,
+        name: "Stryker Interceptor",
+        category: "Hypercar",
+        tagline: "Stealth Fighter Inspired High-Speed Cruise Hypercar",
+        hp: 1320,
+        zeroSixty: 2.15,
+        topSpeed: 275,
+        torque: 980,
+        powertrain: "5.0L Twin-Turbo Flat-Plane V8",
+        transmission: "7-Speed Dual Clutch AWD",
+        weight: 3400,
+        drag: 0.31,
+        price: 2600000,
+        features: ["Radar Absorbent Matte Coating", "Active Vectoring Aero Wings", "G-Force HUD Cockpit"],
+        soundType: "v8"
+      },
+      {
+        id: 34,
+        name: "Argonaut V12",
+        category: "Luxury GT",
+        tagline: "Modern Interpretation of 1960s Italian Gran Turismo",
+        hp: 790,
+        zeroSixty: 3.0,
+        topSpeed: 225,
+        torque: 710,
+        powertrain: "6.5L 65-Degree V12 Engine",
+        transmission: "8-Speed Dual Clutch RWD",
+        weight: 3850,
+        drag: 0.31,
+        price: 420000,
+        features: ["Polished Aluminium Gated Shifter", "Nappa Leather Luggage Set", "Monolithic Sound Stage"],
+        soundType: "v12"
+      },
+      {
+        id: 35,
+        name: "CyberProwler EV",
+        category: "Cyber SUV",
+        tagline: "Urban Stealth Coupe-SUV with Solar Glass",
+        hp: 900,
+        zeroSixty: 3.0,
+        topSpeed: 175,
+        torque: 880,
+        powertrain: "Tri-Motor Electric AWD",
+        transmission: "Direct Drive AWD",
+        weight: 5200,
+        drag: 0.27,
+        price: 180000,
+        features: ["Flush Pop-Out Door Handles", "Camera Mirrors with OLED Displays", "Wireless Induction Pad"],
+        soundType: "electric"
+      },
+      {
+        id: 36,
+        name: "Aurora Shooting Brake",
+        category: "Luxury GT",
+        tagline: "Two-Door Elegant Shooting Brake with Custom Interior",
+        hp: 650,
+        zeroSixty: 3.3,
+        topSpeed: 195,
+        torque: 620,
+        powertrain: "4.0L Twin-Turbo V8",
+        transmission: "8-Speed Automatic AWD",
+        weight: 4400,
+        drag: 0.32,
+        price: 215000,
+        features: ["Teak Wood Lined Trunk Deck", "Heated Massaging Front Seats", "Panoramic Starlight Glass"],
+        soundType: "v8"
+      },
+      {
+        id: 37,
+        name: "Centurion Apex",
+        category: "Hypercar",
+        tagline: "Limited to 25 Units Globally with Full Titanium Monocell",
+        hp: 1500,
+        zeroSixty: 2.05,
+        topSpeed: 295,
+        torque: 1100,
+        powertrain: "5.8L Supercharged V8 Hybrid",
+        transmission: "7-Speed Seamless Shift Sequential",
+        weight: 3250,
+        drag: 0.33,
+        price: 3600000,
+        features: ["Numbered Gold Plaque", "Carbon Fiber Lug Nut Caps", "High Downforce Air Dam"],
+        soundType: "v8"
+      },
+      {
+        id: 38,
+        name: "Tachyon Pulse",
+        category: "Electric EV",
+        tagline: "Formula E Battery Technology in a Track-Ready Coupe",
+        hp: 1600,
+        zeroSixty: 1.82,
+        topSpeed: 265,
+        torque: 1400,
+        powertrain: "Quad Axial-Flux Motor System",
+        transmission: "Direct Drive Quad-Wheel Vector",
+        weight: 4100,
+        drag: 0.24,
+        price: 2300000,
+        features: ["Immersion Cooled Battery Cell Pack", "Pirelli P Zero Trofeo EV Tires", "Telemetry Logger"],
+        soundType: "electric"
+      },
+      {
+        id: 39,
+        name: "Razorback Offroad",
+        category: "Cyber SUV",
+        tagline: "Extreme Sand Dune & Rock Crawler Cyber Buggy",
+        hp: 850,
+        zeroSixty: 3.4,
+        topSpeed: 150,
+        torque: 820,
+        powertrain: "Twin-Turbocharged V6 Hybrid",
+        transmission: "Heavy Duty 8-Speed 4WD with Low Range",
+        weight: 4800,
+        drag: 0.48,
+        price: 165000,
+        features: ["37-inch All-Terrain Beadlock Wheels", "High Clearance Portal Axles", "Roof Light Pods"],
+        soundType: "v8"
+      },
+      {
+        id: 40,
+        name: "Pegasus Aero",
+        category: "Vision Concept",
+        tagline: "Active Morphing Wing Surface Inspired by Falcon Wings",
+        hp: 1100,
+        zeroSixty: 2.2,
+        topSpeed: 260,
+        torque: 880,
+        powertrain: "Turbine-Electric Hybrid Unit",
+        transmission: "Single Speed High-Flux",
+        weight: 3100,
+        drag: 0.18,
+        price: 4100000,
+        features: ["Morphing Polymeric Flaps", "Synthetic Leather Bio-Interiors", "Neural Cockpit UI"],
+        soundType: "v16"
+      },
+      {
+        id: 41,
+        name: "Obsidian Black Edition",
+        category: "Hypercar",
+        tagline: "Vanta-Black Light Absorbing Limited Supercar",
+        hp: 1400,
+        zeroSixty: 2.1,
+        topSpeed: 280,
+        torque: 1040,
+        powertrain: "6.0L Twin-Turbo W12",
+        transmission: "8-Speed Dual Clutch AWD",
+        weight: 3600,
+        drag: 0.32,
+        price: 3400000,
+        features: ["99.4% Light Absorption Finish", "Red Luminous Brake Calipers", "Custom Carbon Helmet"],
+        soundType: "v12"
+      },
+      {
+        id: 42,
+        name: "Phantom Cross GT",
+        category: "Electric EV",
+        tagline: "Rugged All-Weather Electric Sport Turismo",
+        hp: 720,
+        zeroSixty: 3.1,
+        topSpeed: 185,
+        torque: 710,
+        powertrain: "Dual Permanent Magnet Motors",
+        transmission: "Single Speed AWD",
+        weight: 4750,
+        drag: 0.26,
+        price: 140000,
+        features: ["Raised Ground Clearance Mode", "Gravel & Snow Active Traction", "Fast DC 350kW Recharging"],
+        soundType: "electric"
+      },
+      {
+        id: 43,
+        name: "Valkyrie LeMans RS",
+        category: "Track Beast",
+        tagline: "Downforce King Delivering 1,800 kg of Downforce at 180 mph",
+        hp: 1150,
+        zeroSixty: 1.95,
+        topSpeed: 250,
+        torque: 850,
+        powertrain: "6.5L Cosworth V12 Revving to 11,500 RPM",
+        transmission: "7-Speed Ricardo Sequential",
+        weight: 2350,
+        drag: 0.44,
+        price: 3100000,
+        features: ["Venturi Underbody Tunnels", "Full Carbon Monocoque", "Quick-Release Steering Wheel"],
+        soundType: "v12"
+      },
+      {
+        id: 44,
+        name: "HyperGlider Vision",
+        category: "Vision Concept",
+        tagline: "Ultra-Low Drag Aerodynamic Winged Streamliner",
+        hp: 1800,
+        zeroSixty: 1.65,
+        topSpeed: 320,
+        torque: 1600,
+        powertrain: "Graphene Battery Quad Electric Motors",
+        transmission: "Independent Direct Drive",
+        weight: 2950,
+        drag: 0.15,
+        price: 6200000,
+        features: ["Ultra-Long Tapered Teardrop Tail", "Enclosed Wheel Spats", "Zero Cockpit Mirrors"],
+        soundType: "electric"
+      },
+      {
+        id: 45,
+        name: "Vanguard Armor 4x4",
+        category: "Cyber SUV",
+        tagline: "Tactical VIP Transport with EMP Shielding",
+        hp: 920,
+        zeroSixty: 3.6,
+        topSpeed: 155,
+        torque: 910,
+        powertrain: "6.7L Turbo-Diesel V8 Hybrid",
+        transmission: "Heavy Duty 10-Speed Allison Automatic",
+        weight: 8200,
+        drag: 0.55,
+        price: 310000,
+        features: ["B7 Level Armor Protection", "Run-Flat Self-Sealing Tires", "Siren & Public Address"],
+        soundType: "v8"
+      },
+      {
+        id: 46,
+        name: "Grand Sovereign Landaulet",
+        category: "Luxury GT",
+        tagline: "Semi-Convertible Chauffeur Coach for High Dignitaries",
+        hp: 650,
+        zeroSixty: 4.0,
+        topSpeed: 180,
+        torque: 680,
+        powertrain: "6.0L Twin-Turbo V12",
+        transmission: "8-Speed Automatic RWD",
+        weight: 6200,
+        drag: 0.38,
+        price: 720000,
+        features: ["Retractable Rear Fabric Soft Top", "Fold-Out Rosewood Writing Desks", "Champagne Flutes"],
+        soundType: "v12"
+      },
+      {
+        id: 47,
+        name: "Zephyr Aerofoil",
+        category: "Hypercar",
+        tagline: "Twin-Supercharged Lightweight Carbon Bullet",
+        hp: 1280,
+        zeroSixty: 2.2,
+        topSpeed: 270,
+        torque: 940,
+        powertrain: "5.0L Twin-Supercharged V8",
+        transmission: "9-Speed Multi-Clutch LST Transmission",
+        weight: 3180,
+        drag: 0.30,
+        price: 2750000,
+        features: ["Dihedral Synchro-Helix Doors", "Carbon-Aircore Wheels", "Freevalve Camless Engine"],
+        soundType: "v8"
+      },
+      {
+        id: 48,
+        name: "Nucleus Ion Drive",
+        category: "Electric EV",
+        tagline: "Solid-State Modular Battery Hyper-Tourer",
+        hp: 1100,
+        zeroSixty: 2.0,
+        topSpeed: 230,
+        torque: 980,
+        powertrain: "Tri-Motor High Performance EV",
+        transmission: "Single Speed AWD",
+        weight: 4350,
+        drag: 0.22,
+        price: 210000,
+        features: ["10-Minute Rapid 80% Recharging", "Dynamic Torque Vectoring", "Glass Cockpit Display"],
+        soundType: "electric"
+      },
+      {
+        id: 49,
+        name: "Stratos GT Track",
+        category: "Track Beast",
+        tagline: "Carbon Aerodynamic Track Weapon with Full Telemetry Cloud",
+        hp: 950,
+        zeroSixty: 2.3,
+        topSpeed: 225,
+        torque: 740,
+        powertrain: "3.9L Twin-Turbo V8",
+        transmission: "7-Speed Dual Clutch RWD",
+        weight: 2800,
+        drag: 0.41,
+        price: 890000,
+        features: ["Carbon Fiber Undertray with Venturis", "Sabelt 6-Point Racing Harness", "Video Logger"],
+        soundType: "v8"
+      },
+      {
+        id: 50,
+        name: "Nova Infinity Hyper-Pod",
+        category: "Vision Concept",
+        tagline: "Autonomous High-Speed Transcontinental Capsule",
+        hp: 2200,
+        zeroSixty: 1.45,
+        topSpeed: 350,
+        torque: 2100,
+        powertrain: "Superconducting Magneto-Electric Quad Turbines",
+        transmission: "Infinite Ratio Electromagnetic Vector",
+        weight: 3400,
+        drag: 0.14,
+        price: 8900000,
+        features: ["Level 5 Full Autonomy", "360-Degree Panoramic OLED Shell", "Anti-Gravity Suspension"],
+        soundType: "electric"
+      },
+      {
+        id: 51,
+        name: "Colossus Heavy Cyber",
+        category: "Cyber SUV",
+        tagline: "Armored Commercial Filming Rig & Heavy Chase Vehicle",
+        hp: 1050,
+        zeroSixty: 3.2,
+        topSpeed: 165,
+        torque: 1150,
+        powertrain: "Twin-Turbo Hybrid V8 with High Voltage Auxiliary",
+        transmission: "Heavy Duty 8-Speed AWD",
+        weight: 6800,
+        drag: 0.49,
+        price: 260000,
+        features: ["Roof Stabilized Camera Crane Mount", "Director 4-Screen Viewing Console", "High-Power Floodlights"],
+        soundType: "v8"
+      },
+      {
+        id: 52,
+        name: "Titanus Grand Tourer",
+        category: "Luxury GT",
+        tagline: "V12 Continental Cruiser with Yacht-Inspired Decking",
+        hp: 820,
+        zeroSixty: 2.85,
+        topSpeed: 230,
+        torque: 790,
+        powertrain: "6.3L Naturally Aspirated V12",
+        transmission: "7-Speed Dual Clutch RWD",
+        weight: 3950,
+        drag: 0.30,
+        price: 490000,
+        features: ["Handcrafted Polished Teak Decking", "Swiss Chronograph In-Dash Watch", "Active Rear Spoiler"],
+        soundType: "v12"
+      }
+    ];
+
+    // ==========================================
+    // 2. THREE.JS 3D AUTOMOTIVE SHOWROOM
+    // ==========================================
+    let scene, camera, renderer, controls;
+    let carGroup, carBodyMesh, wheels = [], underglowLight, spotLights = [];
+    let isWireframe = false, isTurntable = true, areHeadlightsOn = true, isUnderglowOn = true;
+    let currentCarColor = 0xa0aab8;
+
+    function init3DStudio() {
+      const container = document.getElementById('canvas3d-container');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      // Scene
+      scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x07090e, 0.035);
+
+      // Camera
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+      camera.position.set(5.5, 2.2, 5.5);
+
+      // Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.25;
+      container.appendChild(renderer.domElement);
+
+      // Orbit Controls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 - 0.02; // Don't go under floor
+      controls.minDistance = 3;
+      controls.maxDistance = 12;
+
+      // Lighting Rig
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+      scene.add(ambientLight);
+
+      // Key light
+      const keyLight = new THREE.SpotLight(0xffffff, 3.5, 30, Math.PI / 4, 0.3);
+      keyLight.position.set(5, 8, 5);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.width = 1024;
+      keyLight.shadow.mapSize.height = 1024;
+      scene.add(keyLight);
+      spotLights.push(keyLight);
+
+      // Rim light (Cyan Neon)
+      const cyanRim = new THREE.SpotLight(0x00f0ff, 4.0, 25, Math.PI / 3, 0.5);
+      cyanRim.position.set(-6, 5, -5);
+      scene.add(cyanRim);
+      spotLights.push(cyanRim);
+
+      // Warm back accent
+      const warmAccent = new THREE.PointLight(0xff7700, 1.5, 15);
+      warmAccent.position.set(0, 3, -6);
+      scene.add(warmAccent);
+
+      // Studio Ground Grid & Reflective Floor
+      const floorGeo = new THREE.PlaneGeometry(50, 50);
+      const floorMat = new THREE.MeshStandardMaterial({
+        color: 0x07090e,
+        roughness: 0.25,
+        metalness: 0.8
+      });
+      const floor = new THREE.Mesh(floorGeo, floorMat);
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      const gridHelper = new THREE.GridHelper(40, 40, 0x00f0ff, 0x182438);
+      gridHelper.position.y = 0.005;
+      scene.add(gridHelper);
+
+      // Underglow Light
+      underglowLight = new THREE.PointLight(0x00f0ff, 3.5, 4);
+      underglowLight.position.set(0, 0.15, 0);
+      scene.add(underglowLight);
+
+      // Build Procedural High-Fidelity Supercar 3D Model
+      buildProceduralSupercar();
+
+      // Window resize
+      window.addEventListener('resize', onWindowResize);
+
+      // Animation Loop
+      animate();
+    }
+
+    function buildProceduralSupercar() {
+      carGroup = new THREE.Group();
+
+      // Materials
+      const paintMaterial = new THREE.MeshPhysicalMaterial({
+        color: currentCarColor,
+        metalness: 0.9,
+        roughness: 0.15,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.1,
+        reflectivity: 0.9
+      });
+
+      const carbonMaterial = new THREE.MeshStandardMaterial({
+        color: 0x111114,
+        metalness: 0.3,
+        roughness: 0.6
+      });
+
+      const glassMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x0d121c,
+        metalness: 0.2,
+        roughness: 0.05,
+        transmission: 0.8,
+        transparent: true,
+        opacity: 0.9
+      });
+
+      const rimMaterial = new THREE.MeshStandardMaterial({
+        color: 0x222630,
+        metalness: 0.95,
+        roughness: 0.15
+      });
+
+      const brakeCalipMaterial = new THREE.MeshStandardMaterial({
+        color: 0xff1e46,
+        metalness: 0.5,
+        roughness: 0.2
+      });
+
+      const headlightGlowMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const taillightGlowMat = new THREE.MeshBasicMaterial({ color: 0xff1e46 });
+
+      // 1. Lower Main Aerodynamic Chassis
+      const chassisGeo = new THREE.BoxGeometry(1.9, 0.4, 4.4);
+      const chassis = new THREE.Mesh(chassisGeo, paintMaterial);
+      chassis.position.y = 0.45;
+      chassis.castShadow = true;
+      chassis.receiveShadow = true;
+      carGroup.add(chassis);
+      carBodyMesh = chassis;
+
+      // 2. Cockpit Greenhouse / Glass Dome
+      const cockpitGeo = new THREE.CylinderGeometry(0.7, 0.95, 0.6, 12, 1, false, 0, Math.PI);
+      const cockpit = new THREE.Mesh(cockpitGeo, glassMaterial);
+      cockpit.rotation.z = Math.PI;
+      cockpit.rotation.y = -Math.PI / 2;
+      cockpit.position.set(0, 0.85, -0.15);
+      cockpit.scale.set(1, 0.75, 1.7);
+      cockpit.castShadow = true;
+      carGroup.add(cockpit);
+
+      // 3. Front Nose Cone & Aerodynamic Splitter
+      const noseGeo = new THREE.ConeGeometry(0.95, 0.8, 6);
+      const nose = new THREE.Mesh(noseGeo, paintMaterial);
+      nose.rotation.x = Math.PI / 2;
+      nose.position.set(0, 0.4, 2.4);
+      nose.scale.set(1, 0.6, 0.4);
+      nose.castShadow = true;
+      carGroup.add(nose);
+
+      // Carbon front splitter
+      const splitterGeo = new THREE.BoxGeometry(2.05, 0.04, 0.6);
+      const splitter = new THREE.Mesh(splitterGeo, carbonMaterial);
+      splitter.position.set(0, 0.2, 2.3);
+      carGroup.add(splitter);
+
+      // 4. Rear Diffuser & Aero Wing
+      const diffuserGeo = new THREE.BoxGeometry(1.95, 0.25, 0.5);
+      const diffuser = new THREE.Mesh(diffuserGeo, carbonMaterial);
+      diffuser.position.set(0, 0.3, -2.25);
+      carGroup.add(diffuser);
+
+      // Dual High-Downforce Rear Wing
+      const wingGeo = new THREE.BoxGeometry(2.1, 0.05, 0.4);
+      const wing = new THREE.Mesh(wingGeo, carbonMaterial);
+      wing.position.set(0, 1.15, -2.1);
+      wing.castShadow = true;
+      carGroup.add(wing);
+
+      // Wing Struts
+      const strutGeo = new THREE.BoxGeometry(0.04, 0.35, 0.2);
+      const strutL = new THREE.Mesh(strutGeo, carbonMaterial);
+      strutL.position.set(-0.6, 0.95, -2.1);
+      const strutR = new THREE.Mesh(strutGeo, carbonMaterial);
+      strutR.position.set(0.6, 0.95, -2.1);
+      carGroup.add(strutL);
+      carGroup.add(strutR);
+
+      // 5. LED Headlight Strips
+      const headL = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.04, 0.1), headlightGlowMat);
+      headL.position.set(-0.7, 0.55, 2.15);
+      const headR = headL.clone();
+      headR.position.x = 0.7;
+      carGroup.add(headL);
+      carGroup.add(headR);
+
+      // LED Taillight Blade
+      const tailBlade = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.04, 0.06), taillightGlowMat);
+      tailBlade.position.set(0, 0.6, -2.22);
+      carGroup.add(tailBlade);
+
+      // 6. High-Detail Wheels (4 Corners)
+      const wheelPos = [
+        { x: -1.02, y: 0.36, z: 1.4 },
+        { x: 1.02, y: 0.36, z: 1.4 },
+        { x: -1.02, y: 0.38, z: -1.35 },
+        { x: 1.02, y: 0.38, z: -1.35 }
+      ];
+
+      wheels = [];
+      wheelPos.forEach(pos => {
+        const wGroup = new THREE.Group();
+        wGroup.position.set(pos.x, pos.y, pos.z);
+
+        // Tire
+        const tireGeo = new THREE.CylinderGeometry(0.36, 0.36, 0.3, 24);
+        const tireMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
+        const tire = new THREE.Mesh(tireGeo, tireMat);
+        tire.rotation.z = Math.PI / 2;
+        tire.castShadow = true;
+        wGroup.add(tire);
+
+        // Alloy Rim Rim Cap
+        const rimGeo = new THREE.CylinderGeometry(0.26, 0.26, 0.31, 16);
+        const rim = new THREE.Mesh(rimGeo, rimMaterial);
+        rim.rotation.z = Math.PI / 2;
+        wGroup.add(rim);
+
+        // Brake Disc & Red Caliper
+        const discGeo = new THREE.CylinderGeometry(0.21, 0.21, 0.28, 16);
+        const discMat = new THREE.MeshStandardMaterial({ color: 0x666666, metalness: 0.9, roughness: 0.2 });
+        const disc = new THREE.Mesh(discGeo, discMat);
+        disc.rotation.z = Math.PI / 2;
+        wGroup.add(disc);
+
+        const caliperGeo = new THREE.BoxGeometry(0.12, 0.15, 0.08);
+        const caliper = new THREE.Mesh(caliperGeo, brakeCalipMaterial);
+        caliper.position.set(0, 0.12, 0);
+        wGroup.add(caliper);
+
+        carGroup.add(wGroup);
+        wheels.push(wGroup);
+      });
+
+      scene.add(carGroup);
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('canvas3d-container');
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Auto Turntable
+      if (isTurntable && carGroup) {
+        carGroup.rotation.y += 0.005;
+      }
+
+      // Rotate wheels
+      wheels.forEach(w => {
+        w.children.forEach(c => {
+          if (c.geometry.type === "CylinderGeometry") {
+            c.rotation.x += 0.02;
+          }
+        });
+      });
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    // 3D Studio Controls
+    function changeCarColor(hex, el) {
+      currentCarColor = hex;
+      if (carBodyMesh) {
+        carBodyMesh.material.color.setHex(hex);
+      }
+      if (el) {
+        document.querySelectorAll('.color-pill').forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+      }
+    }
+
+    function toggleHeadlights() {
+      areHeadlightsOn = !areHeadlightsOn;
+      document.getElementById('btn-headlights').classList.toggle('active', areHeadlightsOn);
+      spotLights[0].intensity = areHeadlightsOn ? 3.5 : 0.8;
+    }
+
+    function toggleUnderglow() {
+      isUnderglowOn = !isUnderglowOn;
+      document.getElementById('btn-underglow').classList.toggle('active', isUnderglowOn);
+      underglowLight.intensity = isUnderglowOn ? 3.5 : 0;
+    }
+
+    function toggleWireframe() {
+      isWireframe = !isWireframe;
+      document.getElementById('btn-wireframe').classList.toggle('active', isWireframe);
+      carGroup.traverse(child => {
+        if (child.isMesh && child.material) {
+          child.material.wireframe = isWireframe;
+        }
+      });
+    }
+
+    function toggleTurntable() {
+      isTurntable = !isTurntable;
+      document.getElementById('btn-turntable').classList.toggle('active', isTurntable);
+    }
+
+    function focusCameraPreset(preset) {
+      if (preset === 'iso') {
+        camera.position.set(5.5, 2.2, 5.5);
+      } else if (preset === 'front') {
+        camera.position.set(0, 1.2, 6.0);
+      } else if (preset === 'side') {
+        camera.position.set(-6.5, 1.4, 0);
+      } else if (preset === 'top') {
+        camera.position.set(0, 7.5, 0.5);
+      }
+      controls.target.set(0, 0.5, 0);
+    }
+
+    // ==========================================
+    // 3. SYNTHESIZED WEB AUDIO API SOUND ENGINE
+    // ==========================================
+    let audioCtx = null;
+    let isAmbientPlaying = false;
+    let ambientGain = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+    }
+
+    // Engine Rev & Electric Whine Synthesizer
+    function playCarAudio(type) {
+      initAudio();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      const filter = audioCtx.createBiquadFilter();
+
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(400, audioCtx.currentTime);
+
+      osc.type = type === 'electric' ? 'sine' : 'sawtooth';
+      
+      const now = audioCtx.currentTime;
+      if (type === 'electric') {
+        // Futuristic turbine spool
+        osc.frequency.setValueAtTime(120, now);
+        osc.frequency.exponentialRampToValueAtTime(1400, now + 1.2);
+        osc.frequency.exponentialRampToValueAtTime(700, now + 2.0);
+        gainNode.gain.setValueAtTime(0.15, now);
+        gainNode.gain.linearRampToValueAtTime(0.01, now + 2.2);
+      } else {
+        // V8/V12/V16 Throttle Rev
+        osc.frequency.setValueAtTime(80, now);
+        osc.frequency.exponentialRampToValueAtTime(360, now + 0.5);
+        osc.frequency.exponentialRampToValueAtTime(180, now + 1.2);
+        osc.frequency.exponentialRampToValueAtTime(420, now + 1.8);
+        osc.frequency.exponentialRampToValueAtTime(90, now + 2.8);
+        
+        filter.frequency.setValueAtTime(300, now);
+        filter.frequency.exponentialRampToValueAtTime(2500, now + 0.5);
+        filter.frequency.exponentialRampToValueAtTime(800, now + 2.8);
+
+        gainNode.gain.setValueAtTime(0.2, now);
+        gainNode.gain.linearRampToValueAtTime(0.01, now + 2.9);
+      }
+
+      osc.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + 3.0);
+    }
+
+    // Ambient Synth Background
+    function toggleAmbientSound() {
+      initAudio();
+      const btn = document.getElementById('audio-toggle-btn');
+      if (isAmbientPlaying) {
+        ambientGain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 1);
+        isAmbientPlaying = false;
+        btn.classList.remove('btn-neon');
+        btn.classList.add('btn-glass');
+      } else {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        ambientGain = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
+
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(55, audioCtx.currentTime); // A1 note
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(110, audioCtx.currentTime); // A2 harmonic
+
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(220, audioCtx.currentTime);
+
+        ambientGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+
+        osc1.connect(filter);
+        osc2.connect(filter);
+        filter.connect(ambientGain);
+        ambientGain.connect(audioCtx.destination);
+
+        osc1.start();
+        osc2.start();
+        isAmbientPlaying = true;
+        btn.classList.remove('btn-glass');
+        btn.classList.add('btn-neon');
+      }
+    }
+
+    document.getElementById('audio-toggle-btn').addEventListener('click', toggleAmbientSound);
+
+    // ==========================================
+    // 4. FLEET RENDERING & FILTERING
+    // ==========================================
+    let currentCategory = 'all';
+    let compareList = [];
+
+    function renderFleetGrid(cars) {
+      const container = document.getElementById('fleet-container');
+      container.innerHTML = '';
+
+      cars.forEach(car => {
+        const isCompared = compareList.includes(car.id);
+        const card = document.createElement('div');
+        card.className = 'car-card';
+        card.innerHTML = `
+          <div class="car-badge">${car.category}</div>
+          <div class="car-visual">
+            <svg class="car-icon-graphic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+            <div style="position:absolute; bottom:0.6rem; font-family:var(--font-mono); font-size:0.7rem; color:var(--neon-cyan);">
+              ${car.powertrain.split(' ')[0]} POWER
+            </div>
+          </div>
+
+          <div class="car-category">${car.category}</div>
+          <h3 class="car-name">${car.name}</h3>
+          <p class="car-tagline">${car.tagline}</p>
+
+          <div class="specs-grid">
+            <div class="spec-item">
+              <div class="spec-val">${car.hp.toLocaleString()}</div>
+              <div class="spec-label">Horsepower</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-val">${car.zeroSixty}s</div>
+              <div class="spec-label">0-60 MPH</div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-val">${car.topSpeed}</div>
+              <div class="spec-label">Top MPH</div>
+            </div>
+          </div>
+
+          <div class="car-footer">
+            <div class="car-price">$${car.price.toLocaleString()}</div>
+            <div class="car-actions">
+              <button class="btn-icon ${isCompared ? 'active' : ''}" title="Compare Vehicle" onclick="toggleCompare(${car.id})">
+                <i data-lucide="git-compare" size="16"></i>
+              </button>
+              <button class="btn-icon" title="Hear Engine / Motor Rev" onclick="playCarAudio('${car.soundType}')">
+                <i data-lucide="volume-2" size="16"></i>
+              </button>
+              <button class="btn btn-neon" style="padding:0.45rem 0.9rem; font-size:0.75rem;" onclick="openSpecModal(${car.id})">
+                Full Specs
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      document.getElementById('car-count-label').innerText = cars.length;
+      lucide.createIcons();
+    }
+
+    function filterCars() {
+      const search = document.getElementById('fleet-search').value.toLowerCase();
+      const powertrain = document.getElementById('powertrain-filter').value;
+      const sort = document.getElementById('sort-filter').value;
+
+      let filtered = FLEET_DATABASE.filter(car => {
+        const matchesCategory = currentCategory === 'all' || car.category === currentCategory;
+        const matchesSearch = car.name.toLowerCase().includes(search) || 
+                              car.category.toLowerCase().includes(search) || 
+                              car.powertrain.toLowerCase().includes(search);
+        
+        let matchesPowertrain = true;
+        if (powertrain !== 'all') {
+          matchesPowertrain = car.powertrain.toLowerCase().includes(powertrain.toLowerCase());
+        }
+
+        return matchesCategory && matchesSearch && matchesPowertrain;
+      });
+
+      // Sorting
+      if (sort === 'hp-desc') filtered.sort((a, b) => b.hp - a.hp);
+      else if (sort === 'speed-desc') filtered.sort((a, b) => b.topSpeed - a.topSpeed);
+      else if (sort === 'accel-asc') filtered.sort((a, b) => a.zeroSixty - b.zeroSixty);
+      else if (sort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+      else if (sort === 'price-asc') filtered.sort((a, b) => a.price - b.price);
+
+      renderFleetGrid(filtered);
+    }
+
+    function setCategoryFilter(cat, el) {
+      currentCategory = cat;
+      document.querySelectorAll('#category-filter-container .pill').forEach(p => p.classList.remove('active'));
+      if (el) el.classList.add('active');
+      filterCars();
+    }
+
+    // ==========================================
+    // 5. COMPARISON SYSTEM
+    // ==========================================
+    function toggleCompare(id) {
+      const idx = compareList.indexOf(id);
+      if (idx > -1) {
+        compareList.splice(idx, 1);
+      } else {
+        if (compareList.length >= 3) {
+          alert("You can compare up to 3 vehicles at once.");
+          return;
+        }
+        compareList.push(id);
+      }
+      updateCompareDock();
+      filterCars();
+    }
+
+    function updateCompareDock() {
+      const dock = document.getElementById('compare-dock');
+      const count = document.getElementById('compare-count');
+      const chipsContainer = document.getElementById('compare-chips');
+
+      count.innerText = compareList.length;
+
+      if (compareList.length > 0) {
+        dock.classList.add('visible');
+        chipsContainer.innerHTML = compareList.map(id => {
+          const car = FLEET_DATABASE.find(c => c.id === id);
+          return `
+            <div class="compare-chip">
+              ${car.name}
+              <span onclick="toggleCompare(${car.id})">&times;</span>
+            </div>
+          `;
+        }).join('');
+      } else {
+        dock.classList.remove('visible');
+        chipsContainer.innerHTML = '';
+      }
+    }
+
+    function openCompareModal() {
+      if (compareList.length < 2) {
+        alert("Please select at least 2 vehicles to compare.");
+        return;
+      }
+
+      const cars = compareList.map(id => FLEET_DATABASE.find(c => c.id === id));
+      const content = document.getElementById('compare-matrix-content');
+
+      // Find best values
+      const maxHP = Math.max(...cars.map(c => c.hp));
+      const min060 = Math.min(...cars.map(c => c.zeroSixty));
+      const maxSpeed = Math.max(...cars.map(c => c.topSpeed));
+      const minWeight = Math.min(...cars.map(c => c.weight));
+
+      let html = `
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>Metric / Specification</th>
+              ${cars.map(c => `<th style="color:#fff; font-size:1rem; font-family:var(--font-display);">${c.name}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Category</td>
+              ${cars.map(c => `<td><span class="car-badge">${c.category}</span></td>`).join('')}
+            </tr>
+            <tr>
+              <td>Powertrain</td>
+              ${cars.map(c => `<td>${c.powertrain}</td>`).join('')}
+            </tr>
+            <tr>
+              <td>Horsepower (HP)</td>
+              ${cars.map(c => `<td class="${c.hp === maxHP ? 'winner-val' : ''}">${c.hp.toLocaleString()} HP</td>`).join('')}
+            </tr>
+            <tr>
+              <td>0-60 MPH (Acceleration)</td>
+              ${cars.map(c => `<td class="${c.zeroSixty === min060 ? 'winner-val' : ''}">${c.zeroSixty} seconds</td>`).join('')}
+            </tr>
+            <tr>
+              <td>Top Speed</td>
+              ${cars.map(c => `<td class="${c.topSpeed === maxSpeed ? 'winner-val' : ''}">${c.topSpeed} MPH (${Math.round(c.topSpeed * 1.609)} km/h)</td>`).join('')}
+            </tr>
+            <tr>
+              <td>Torque</td>
+              ${cars.map(c => `<td>${c.torque} lb-ft (${Math.round(c.torque * 1.355)} Nm)</td>`).join('')}
+            </tr>
+            <tr>
+              <td>Transmission</td>
+              ${cars.map(c => `<td>${c.transmission}</td>`).join('')}
+            </tr>
+            <tr>
+              <td>Curb Weight</td>
+              ${cars.map(c => `<td class="${c.weight === minWeight ? 'winner-val' : ''}">${c.weight.toLocaleString()} lbs</td>`).join('')}
+            </tr>
+            <tr>
+              <td>Aerodynamic Drag (Cd)</td>
+              ${cars.map(c => `<td>${c.drag} Cd</td>`).join('')}
+            </tr>
+            <tr>
+              <td>MSRP Estimate</td>
+              ${cars.map(c => `<td style="color:var(--neon-cyan); font-weight:800;">$${c.price.toLocaleString()}</td>`).join('')}
+            </tr>
+          </tbody>
+        </table>
+      `;
+
+      content.innerHTML = html;
+      document.getElementById('compare-modal').classList.add('open');
+    }
+
+    function closeCompareModal() {
+      document.getElementById('compare-modal').classList.remove('open');
+    }
+
+    // ==========================================
+    // 6. DETAILED SPECIFICATION MODAL
+    // ==========================================
+    function openSpecModal(id) {
+      const car = FLEET_DATABASE.find(c => c.id === id);
+      const content = document.getElementById('modal-spec-content');
+
+      // Update 3D Studio car name dock
+      document.getElementById('car-name-dock').innerText = car.name;
+
+      content.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+          <div>
+            <div class="car-category">${car.category}</div>
+            <h2 style="font-family:var(--font-display); font-size:2.2rem; font-weight:800;">${car.name}</h2>
+            <p style="color:var(--text-muted); font-size:0.95rem;">${car.tagline}</p>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">STARTING MSRP</div>
+            <div style="font-size:1.8rem; font-weight:800; color:var(--neon-cyan); font-family:var(--font-mono);">$${car.price.toLocaleString()}</div>
+          </div>
+        </div>
+
+        <div class="specs-grid" style="grid-template-columns:repeat(4, 1fr); padding:1.25rem; margin:1.5rem 0;">
+          <div class="spec-item">
+            <div class="spec-val" style="font-size:1.5rem;">${car.hp.toLocaleString()}</div>
+            <div class="spec-label">Horsepower</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-val" style="font-size:1.5rem;">${car.zeroSixty}s</div>
+            <div class="spec-label">0-60 MPH</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-val" style="font-size:1.5rem;">${car.topSpeed}</div>
+            <div class="spec-label">Top Speed (MPH)</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-val" style="font-size:1.5rem;">${car.torque}</div>
+            <div class="spec-label">Torque (lb-ft)</div>
+          </div>
+        </div>
+
+        <h4 style="font-family:var(--font-display); margin-bottom:0.75rem;">Technical & Engineering Dossier</h4>
+        <table class="spec-table" style="margin-bottom:1.5rem;">
+          <tbody>
+            <tr><td style="width:30%;">Powertrain Architecture</td><td>${car.powertrain}</td></tr>
+            <tr><td>Transmission & Drive</td><td>${car.transmission}</td></tr>
+            <tr><td>Curb Weight</td><td>${car.weight.toLocaleString()} lbs (${Math.round(car.weight * 0.4535)} kg)</td></tr>
+            <tr><td>Drag Coefficient</td><td>${car.drag} Cd</td></tr>
+            <tr><td>Key Innovations</td><td>${car.features.join(' • ')}</td></tr>
+          </tbody>
+        </table>
+
+        <div style="display:flex; gap:1rem;">
+          <button class="btn btn-neon" onclick="playCarAudio('${car.soundType}')">
+            <i data-lucide="volume-2"></i> Play Engine Sound
+          </button>
+          <a href="#hero" class="btn btn-glass" onclick="closeSpecModal(); focusCameraPreset('iso');">
+            <i data-lucide="eye"></i> Inspect in 3D Showroom
+          </a>
+        </div>
+      `;
+
+      document.getElementById('spec-modal').classList.add('open');
+      lucide.createIcons();
+    }
+
+    function closeSpecModal() {
+      document.getElementById('spec-modal').classList.remove('open');
+    }
+
+    // ==========================================
+    // 7. CAMPAIGN ESTIMATOR
+    // ==========================================
+    function populateEstimatorCars() {
+      const select = document.getElementById('calc-car-select');
+      select.innerHTML = FLEET_DATABASE.map(c => `
+        <option value="${c.id}">${c.name} (${c.category}) — $${c.price.toLocaleString()}</option>
+      `).join('');
+    }
+
+    function calculateQuote() {
+      const tier = document.getElementById('calc-tier-select').value;
+      const timeline = document.getElementById('calc-time-select').value;
+
+      let base = 65000;
+      if (tier === 'premium') base = 125000;
+      if (tier === 'enterprise') base = 280000;
+
+      if (document.getElementById('deliv-webgl').checked) base += 25000;
+      if (document.getElementById('deliv-social').checked) base += 12000;
+      if (document.getElementById('deliv-xr').checked) base += 45000;
+      if (document.getElementById('deliv-sound').checked) base += 10000;
+
+      if (timeline === 'expedited') base *= 1.35;
+      if (timeline === 'relaxed') base *= 0.90;
+
+      document.getElementById('calc-total-display').innerText = '$' + Math.round(base).toLocaleString();
+    }
+
+    function submitCampaignRequest() {
+      confetti({
+        particleCount: 120,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+      alert("Proposal request submitted successfully to the nova.tech creative team! A technical director will contact you with 3D master assets within 24 hours.");
+    }
+
+    // Close Modals on Overlay Click
+    window.onclick = function(e) {
+      if (e.target.classList.contains('modal-overlay')) {
+        closeSpecModal();
+        closeCompareModal();
+      }
+    };
+
+    // ==========================================
+    // INITIALIZATION
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+      init3DStudio();
+      renderFleetGrid(FLEET_DATABASE);
+      populateEstimatorCars();
+      calculateQuote();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

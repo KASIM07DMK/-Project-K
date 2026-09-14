@@ -1,0 +1,79 @@
+.Emailinterface{
+      width:450px;
+      height: 5px 5px;
+      border:7px solid blue; 
+      background-color:silver;
+      box-shadow: 10px 10px orangered;
+      text-align: center;
+      border-radius: 70px;
+      margin: 20px auto;
+    }
+    h1{
+      color:rgb(14, 11, 95);
+      border-radius: 50%;
+      font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      font-weight:bolder;
+      line-height: 70px;
+    }
+    body{
+      width:400px;
+      border-radius: 70px;
+      background-color:lightslategray;
+      text-align: center;
+      margin:auto;
+    }
+    #l1{
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: maroon;
+      width: 40%;
+      font-size: medium;
+      font-size: 30px;
+      font-weight: 800;
+      font-style: oblique;
+    }
+    #l4{
+      border:5px solid black;
+      border-radius: 20%;
+      width:70%;
+      background-color: darkblue;
+      box-shadow: 5px 3px green;
+      font-style: italic;
+      font-size: large;
+      font-weight: bolder;
+    }
+    #l2{
+      font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+      font-weight:bold;
+      font-size:x-large;
+      color:darkgreen;
+    }
+    #l5{
+      border:3px solid black;
+      border-radius: 20%;
+      width:70%;
+      background-color: maroon;
+      box-shadow: 5px 3px indigo;
+      font-style: italic;
+      font-size:large;
+      font-weight: bold;
+    }
+    #l3{
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      font-weight: bolder;
+      font-size: x-large;
+      color:rgb(75, 9, 9);
+    }
+    #l6{
+      border-radius: 20%;
+      cursor: pointer;
+      font-weight: bold;
+      border: 5px solid black;
+      background-color:aquamarine;
+      font-size: larger;
+    }
+    #l6:hover{
+      background-color:gray;
+      font-style: oblique;
+      font-size: medium;
+      cursor: pointer;
+    }

@@ -1,0 +1,108 @@
+.Bookingportal{
+         width:700px;
+         height:10px 10px;
+         text-align: center;
+         border:5px solid rgb(213, 144, 53);
+         border-radius: 20%;
+         background-color:lightblue;
+         box-shadow: 5px 7px rgb(60, 13, 107);
+         margin: 30px auto;
+         padding:10px;
+        }
+        h1{
+          color:rgba(5, 6, 47, 0.967);
+          font-style: italic;
+          padding: 10px;
+          font-weight: bolder;
+          line-height: 50px;
+        }
+        #l1{
+            font-family:Verdana, Geneva, Tahoma, sans-serif;
+            cursor: pointer;
+            color:rgb(59, 5, 38);
+            font-size: larger;
+            width: 70px;
+            font-weight:bolder;
+        }
+        #l2{
+            cursor: pointer;
+            font-style: oblique;
+            border-radius: 5%;
+            border: 5px solid rgb(254, 1, 1);
+            background-color:midnightblue;
+            font-weight: bolder;
+        }
+        #l3{
+            font-family: sans-serif;
+            color:rgb(16, 8, 61);
+            font-weight: 900;
+            font-size: large;
+        }
+        #l4{
+           background-color: deepskyblue;
+           cursor: pointer;
+           border-radius: 5%;
+           font-size: larger;
+           font-weight: bolder;
+           font-style: italic;
+           border:5px solid blue; 
+        }
+        #l5{
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: medium;
+            font-weight: bolder;
+            color:rgb(69, 6, 6);
+        }
+        #l6{
+         background-color:rgb(145, 27, 100);
+         cursor: pointer;
+         font-size: larger;
+         border:5px solid darkturquoise;
+         border-radius: 5%;
+         font-weight: bolder;
+         font-style: italic;  
+        }
+        #l7{
+            color: rgb(58, 6, 54);
+            font-size: large;
+            font-weight: bolder;
+            font-style: italic;
+            line-height: 10px;
+        }
+        #l8{
+            border:5px solid indigo;
+            font-size: large;
+            background-color:crimson;
+            font-style: italic;
+            font-weight: bolder;
+            cursor:text;
+            border:5px solid black;
+            border-radius:5%;
+        }
+        #l9{
+            font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: x-large;
+            font-weight: bolder;
+            color:rgb(61, 6, 6)
+        }
+        #l10{
+            cursor:pointer;
+            font-style: italic;
+            font-weight: bolder;
+            font-size: medium;
+            border:5px solid darkturquoise;
+            background-color:brown
+        }
+        #l11{
+            font-style: italic;
+            border: 5px solid rgb(47, 6, 64);
+            background-color: darkorange;
+            font-size: medium;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #l11:hover{
+             background-color: darkolivegreen;
+             font-family: 'Times New Roman', Times, serif;
+             font-size: medium;
+        }

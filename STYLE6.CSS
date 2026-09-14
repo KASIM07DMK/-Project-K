@@ -1,0 +1,31 @@
+body{
+        font-family:Arial, Helvetica, sans-serif;
+        margin: 75px;
+        background-color:lightslategray;
+        text-align: left;
+    }
+    header,footer{
+        width:100%;
+        border:5px solid skyblue;
+        box-shadow: 3px 3px red;
+        border-radius: 15%;
+        color:cadetblue;
+        font-style: italic;
+        font-weight: bold;
+        margin: 10px auto;
+        text-align: center;
+        background-color:rgb(69, 10, 10);
+    }
+    nav{
+        background-color:lightseagreen;
+        font-style: italic;
+        border:5px solid blue;
+        border-radius: 5%;
+        box-shadow: 5px 5px orange;
+        font-weight: bold;
+    }
+    aside{
+        border:5px solid indigo;
+        box-shadow: 3px 5px red;
+        background-color:indianred;
+    }

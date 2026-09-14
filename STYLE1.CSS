@@ -1,0 +1,70 @@
+body div{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    text-align: center;
+}
+.studentidcard{
+    border: 5px solid rgb(0, 0, 255);
+    margin:50px auto;
+    background-color:silver;
+    text-align:center;
+    box-shadow:2px 7px orangered;
+    padding:15px;
+    border-radius:20%;
+    width: 300px;
+}  
+.studentidcard img{
+    border-radius: 100px;
+    border:2px solid black;
+    padding: 10px;
+    text-align: left;
+    background-color: crimson;
+    width:150px;
+    height:10px, 15px;
+}
+.studentidcard h1{
+    color:rgb(79, 47, 5);
+    font-size: large;
+    text-align: center;
+}
+.studentidcard h2{
+    color:rgb(5, 49, 49);
+    font-style: oblique;
+    text-align: center;
+}
+.studentidcard h3{
+    color:rgb(6, 54, 29);
+    font-weight: bold;
+    text-align: center;
+}
+.studentidcard h4{
+    color:rgb(72, 23, 6);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+    text-align: center;
+}
+.studentidcard h5{
+    font-weight:300;
+    color:rgb(58, 13, 156);
+    font-size: larger;
+    font-family: fantasy;
+    text-align: center;
+}
+.studentidcard p{
+    line-height: 20px;
+    color:#b10f0f;
+    font-weight: bold;
+    text-align: center;
+}
+.studentidcard button{
+    cursor:pointer;
+    background-color:pink;
+    font-size:medium;
+    font-weight: bold;
+    padding: 20px;
+    border-radius: 50%;
+    font-style: oblique;
+    border: 5px solid black;
+}
+.studentidcard button:hover{
+    background-color: rgb(128, 64, 12);
+}
